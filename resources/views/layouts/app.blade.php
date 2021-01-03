@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="tr">
+    <head>
+        <meta charset="utf-8">
+        <title>
+            NEPHA  - @yield('title')
+        </title>
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <script src="{{ asset('js/app.js') }}" defer></script>
+        <link rel="dns-prefetch" href="//fonts.gstatic.com">
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+        <meta name="description" content="Page Title">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, minimal-ui">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="msapplication-tap-highlight" content="no">
+        <link id="vendorsbundle" rel="stylesheet" media="screen, print" href="css/vendors.bundle.css">
+        <link id="appbundle" rel="stylesheet" media="screen, print" href="css/app.bundle.css">
+        <link id="mytheme" rel="stylesheet" media="screen, print" href="#">
+        <link id="myskin" rel="stylesheet" media="screen, print" href="css/skins/skin-master.css">
+        <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
+        <link rel="mask-icon" href="img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    </head>
+    <body class="mod-bg-1 ">
+        <div class="page-wrapper">
+            <div class="page-inner">
+                <aside class="page-sidebar">
+                    <div class="page-logo">
+                        <a href="#" class="page-logo-link press-scale-down d-flex align-items-center position-relative" data-toggle="modal" data-target="#modal-shortcut">
+                            <img src="img/logo.png" alt="NEPHA" aria-roledescription="logo">
+                            <span class="page-logo-text mr-1">NEPHA</span>
+                            <span class="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span>
+                            <i class="fal fa-angle-down d-inline-block ml-1 fs-lg color-primary-300"></i>
+                        </a>
+                    </div>
+                    <!-- BEGIN PRIMARY NAVIGATION -->
+                    <nav id="js-primary-nav" class="primary-nav" role="navigation">
+                        <div class="nav-filter">
+                            <div class="position-relative">
+                                <input type="text" id="nav_filter_input" placeholder="Filter menu" class="form-control" tabindex="0">
+                                <a href="#" onclick="return false;" class="btn-primary btn-search-close js-waves-off" data-action="toggle" data-class="list-filter-active" data-target=".page-sidebar">
+                                    <i class="fal fa-chevron-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-text text-center">
+                                <a href="#" class="d-flex align-items-center text-white">
+                                    <span class="text-truncate text-truncate-sm d-inline-block">
+                                    {{ Auth::user()->name ?? '' }}
+                                    </span>
+                                </a>
+                            </div>
+                            <img src="img/card-backgrounds/cover-2-lg.png" class="cover" alt="cover">
+                            <a href="#" onclick="return false;" class="pull-trigger-btn" data-action="toggle" data-class="list-filter-active" data-target=".page-sidebar" data-focus="nav_filter_input">
+                                <i class="fal fa-angle-down"></i>
+                            </a>
+                        </div>
+                        <ul id="js-nav-menu" class="nav-menu">
+                            <li class="active">
+                                <a href="blank.html" title="Ürünler" data-filter-tags="blank page">
+                                    <i class="fal fa-globe"></i>
+                                    <span class="nav-link-text" data-i18n="nav.blankpage">Ürünler</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="filter-message js-filter-message bg-success-600"></div>
+                    </nav>
+                </aside>
+                <div class="page-content-wrapper">
+                    <header class="page-header" role="banner">
+                        <div class="page-logo">
+                            <a href="#" class="page-logo-link press-scale-down d-flex align-items-center position-relative" data-toggle="modal" data-target="#modal-shortcut">
+                                <img src="img/logo.png" alt="NEPHA" aria-roledescription="logo">
+                                <span class="page-logo-text mr-1">NEPHA</span>
+                                <span class="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span>
+                                <i class="fal fa-angle-down d-inline-block ml-1 fs-lg color-primary-300"></i>
+                            </a>
+                        </div>
+                        <div class="hidden-md-down dropdown-icon-menu position-relative">
+                            <a href="#" class="header-btn btn js-waves-off" data-action="toggle" data-class="nav-function-hidden" title="Hide Navigation">
+                                <i class="ni ni-menu"></i>
+                            </a>
+                            <ul>
+                                <li>
+                                    <a href="#" class="btn js-waves-off" data-action="toggle" data-class="nav-function-minify" title="Minify Navigation">
+                                        <i class="ni ni-minify-nav"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="btn js-waves-off" data-action="toggle" data-class="nav-function-fixed" title="Lock Navigation">
+                                        <i class="ni ni-lock-nav"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="hidden-lg-up">
+                            <a href="#" class="header-btn btn press-scale-down" data-action="toggle" data-class="mobile-nav-on">
+                                <i class="ni ni-menu"></i>
+                            </a>
+                        </div>
+                        <div class="ml-auto d-flex">
+                            <div>
+                                @guest
+                                    @if (Route::has('login'))
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                        </li>
+                                    @endif
+                                    @if (Route::has('register'))
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                        </li>
+                                    @endif
+                                @else
+                                    <a href="#" data-toggle="dropdown" title="{{ Auth::user()->email }}" class="header-icon d-flex align-items-center justify-content-center ml-2">
+                                        <!-- <img src="img/demo/avatars/avatar-admin.png" class="profile-image rounded-circle" alt="Serkan Çıracıoğlu"> -->
+                                        {{ Auth::user()->name }}
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-animated dropdown-lg">
+                                        <div class="dropdown-header bg-trans-gradient d-flex flex-row py-4 rounded-top">
+                                            <div class="d-flex flex-row align-items-center mt-1 mb-1 color-white">
+                                                <!-- <span class="mr-2">
+                                                    <img src="img/demo/avatars/avatar-admin.png" class="rounded-circle profile-image" alt="Serkan Çıracıoğlu">
+                                                </span> -->
+                                                <div class="info-card-text">
+                                                    <div class="fs-lg text-truncate text-truncate-lg">{{ Auth::user()->name }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="dropdown-divider m-0"></div>
+                                        <a class="dropdown-item fw-500 pt-3 pb-3" href="{{ route('logout') }}"
+                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                            {{ __('Logout') }}
+                                            <span class="float-right fw-n"></span>
+                                        </a>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                            @csrf
+                                        </form>
+                                    </div>
+                                @endguest
+                            </div>
+                        </div>
+                    </header>
+                    <main id="app" role="main" class="page-content">
+                        <div class="subheader">
+                            <h1 class="subheader-title">
+                                <i class='subheader-icon fal fa-globe'></i> @yield('title')
+                                <span class='fw-300'>@yield('sub_title')</span>
+                            </h1>
+                        </div>
+                       @yield('content')
+                    </main>
+                    <div class="page-content-overlay" data-action="toggle" data-class="mobile-nav-on"></div>
+                    <footer class="page-footer" role="contentinfo">
+                        <div class="d-flex align-items-center flex-1 text-muted">
+                            <span class="hidden-md-down fw-700">{{ date('Y') }} © NEPHA</span>
+                        </div>
+                    </footer>
+                </div>
+            </div>
+        </div>
+        <script src="js/vendors.bundle.js"></script>
+        @yield('script')
+    </body>
+</html>
