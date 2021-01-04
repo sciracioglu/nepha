@@ -34,6 +34,65 @@ class ProductDeclarationController extends Controller
         ]);
         $data['load_date'] = Carbon::parse(request('load_date'))->format('Y-m-d');
         $data['xd'] = Carbon::parse(request('xd'))->format('Y-m-d');
+        $this->addITS($data);
         Products::create($data);
+    }
+
+    private function addITS($data)
+    {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_URL => 'https://its.saglik.gov.tr/RadyofarmasotikIptalBildirim/RadyofarmasotikIptalBildirimReceiverService?wsdl',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_USERPWD => '86989140000120000:Nepha*2019',
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"
+            xmlns:rad=\"http:\/\/its.iegm.gov.tr\/bildirim\/BR\/v1\/Radyofarma\">\n
+            <soapenv:Header/>\n
+            <soapenv:Body>\n
+            <rad:Radyofarma>\n
+            <TOGLN>" . env('ITS_ID') . "</TOGLN>\n
+            <URUNLER>\n
+               <!--1 or more repetitions:-->
+               <URUN>\n
+                  <GTIN>{$data['gtin']}</GTIN>\n
+                  <BN>{$data['bn']}</BN>\n
+                  <PRODUCTION_IDENTIFIER>{$data['production_identifier']}</PRODUCTION_IDENTIFIER>\n
+                  <LOADED_ACTIVITY>{$data['loaded_activity']}</LOADED_ACTIVITY>\n
+                  <LOADED_UNIT_ID>{$data['loaded_unit_id']}</LOADED_UNIT_ID>\n
+                  <CALIBRATION_ACTIVITY>{$data['calibration_activity']}</CALIBRATION_ACTIVITY>\n
+                  <CALIBRATION_UNIT_ID>{$data['calibration_unit_id']}</CALIBRATION_UNIT_ID>\n
+                  <LOAD_DATE>{$data['load_date']}</LOAD_DATE>\n
+                  <DT>{$data['dt']}</DT>\n
+                  <COUNTRY_CODE>{$data['country_code']}</COUNTRY_CODE>\n
+                  <XD>{$data['xd']}</XD>\n
+               </URUN>\n
+            </URUNLER>\n
+         </rad:Radyofarma>\n
+         </soapenv:Body>\n
+         </soapenv:Envelope>",
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: text/xml',
+                'SOAPAction: http://tempuri.org/Radyosformatik/SSO',
+                'Cookie: NSC_WT-MC-L12OFU=ffffffff09081e1545525d5f4f58455e445a4a423660'
+            ],
+        ]);
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        $clean_xml = str_ireplace(['SOAP-ENV:', 'SOAP:', 's:'], '', $response);
+        dump($clean_xml);
+        dump('---');
+        $xml = json_decode(json_encode(simplexml_load_string($clean_xml)), true);
+        dump($xml);
+        $sso_code = $xml['Body'];
+        dd($sso_code);
     }
 }
