@@ -80,24 +80,35 @@
                                 @submit.prevent="saveProduct"
                                 @change="form.errors.clear()"
                                 >
-                                <div class="row">
-                                    <div class="col-md-4">
+                                <div class="row" style="margin-bottom:20px;">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label class='form-label'>Kurum Tipi</label>
-                                            <select v-model='corp.stakeholderType'>
+                                            <select v-model='corp.stakeholderType' class="form-control" @change="getCorp()">
                                                 <option value="hastane">Hastane</option>
                                                 <option value="uretici">Üretici</option>
                                                 <option value="ihracatci">İhracatçı</option>
                                                 <option value="geriodemekurumu">Geri Ödeme Kurumu</option>
                                             </select>
+                                            <span class="text-danger" v-if="corp.errors.has('stakeholderType')">Kurum Tipi zorunlu alan</span>
                                         </div>
                                     </div>
-                                    <div class="col-md-4"></div>
-                                    <div class="col-md-4"></div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class='form-label'>İl</label>
+                                            <select v-model='corp.cityPlate' class="form-control" @change="getCorp()">
+                                                <option value="">Secin</option>
+                                                <option v-for='city in cities' :value='city.code'>{{ city.city }}</option>
+                                            </select>
+                                            <span class="text-danger" v-if="corp.errors.has('cityPlate')">İl zorunlu alan</span>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class='form-label'>TOGLN</label>
-                                    <input type="text" v-model="form.togln" class="form-control" />
+                                    <label class='form-label'>Kurum</label>
+                                    <select v-model="form.togln" class="form-control">
+                                        <option v-for='corp in corps' :value='corp.gln'>{{ corp.companyName }}</option>
+                                    </select>
                                     <span class="text-danger" v-if="form.errors.has('togln')">TOGLN Zorunlu alan</span>
                                 </div>
                                 <div class="row" style="margin-bottom:20px;">
@@ -300,6 +311,8 @@ import 'vue-datetime/dist/vue-datetime.css'
         },
         mounted() {
             this.getProducts();
+            this.getCity();
+            this.getCorp();
         },
         data(){
           return {
@@ -310,11 +323,12 @@ import 'vue-datetime/dist/vue-datetime.css'
             products:[],
             selected:0,
             selected_product:[],
+            cities:[],
             corps:[],
             corp:new Form({
-                stakeholderType:null,
+                stakeholderType:'hastane',
                 getAll:false,
-                cityPlate:null,
+                cityPlate:'06',
             }),
             form:new Form({
                 togln:null,
@@ -354,10 +368,19 @@ import 'vue-datetime/dist/vue-datetime.css'
       },
       methods:{
           getCorp(){
+            var self = this;
+            if(this.corp.cityPlate !== '' && this.corp.stakeholderType !== ''){
+                axios.post('/corp',{stakeholderType:this.corp.stakeholderType,cityPlate:this.corp.cityPlate})
+                    .then(function(data){
+                        self.corps = data.data;
+                    });
+            }
+          },
+          getCity(){
               var self = this;
-              axios.get('/corp')
+              axios.get('/city')
                 .then(({data})=>{
-                    self.corps = data;
+                    self.cities = data;
                 });
           },
           getProducts(){
