@@ -20,6 +20,7 @@ class ProductDeclarationController extends Controller
     public function store()
     {
         $data = request()->validate([
+            'togln' => 'required',
             'gtin' => 'required',
             'bn' => 'required',
             'production_identifier' => 'required',
@@ -43,7 +44,7 @@ class ProductDeclarationController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, [
-            CURLOPT_URL => 'https://its.saglik.gov.tr/RadyofarmasotikIptalBildirim/RadyofarmasotikIptalBildirimReceiverService?wsdl',
+            CURLOPT_URL => 'https://its.saglik.gov.tr/RadyofarmasotikBildirim/RadyofarmasotikBildirimReceiverService?wsdl',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_USERPWD => '86989140000120000:Nepha*2019',
             CURLOPT_ENCODING => '',
@@ -53,11 +54,11 @@ class ProductDeclarationController extends Controller
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"
-            xmlns:rad=\"http:\/\/its.iegm.gov.tr\/bildirim\/BR\/v1\/Radyofarma\">\n
+            xmlns:rad=\"http://its.iegm.gov.tr/bildirim/BR/v1/Radyofarma\">\n
             <soapenv:Header/>\n
             <soapenv:Body>\n
             <rad:Radyofarma>\n
-            <TOGLN>" . env('ITS_ID') . "</TOGLN>\n
+            <TOGLN>{$data['togln']}</TOGLN>\n
             <URUNLER>\n
                <!--1 or more repetitions:-->
                <URUN>\n

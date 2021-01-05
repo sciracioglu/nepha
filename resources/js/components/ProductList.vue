@@ -80,6 +80,26 @@
                                 @submit.prevent="saveProduct"
                                 @change="form.errors.clear()"
                                 >
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class='form-label'>Kurum Tipi</label>
+                                            <select v-model='corp.stakeholderType'>
+                                                <option value="hastane">Hastane</option>
+                                                <option value="uretici">Üretici</option>
+                                                <option value="ihracatci">İhracatçı</option>
+                                                <option value="geriodemekurumu">Geri Ödeme Kurumu</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4"></div>
+                                    <div class="col-md-4"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class='form-label'>TOGLN</label>
+                                    <input type="text" v-model="form.togln" class="form-control" />
+                                    <span class="text-danger" v-if="form.errors.has('togln')">TOGLN Zorunlu alan</span>
+                                </div>
                                 <div class="row" style="margin-bottom:20px;">
                                     <div class="col-md-4">
                                         <div class="form-group">
@@ -290,7 +310,14 @@ import 'vue-datetime/dist/vue-datetime.css'
             products:[],
             selected:0,
             selected_product:[],
+            corps:[],
+            corp:new Form({
+                stakeholderType:null,
+                getAll:false,
+                cityPlate:null,
+            }),
             form:new Form({
+                togln:null,
                 gtin:null,
                 bn:null,
                 production_identifier:null,
@@ -300,7 +327,7 @@ import 'vue-datetime/dist/vue-datetime.css'
                 calibration_unit_id:null,
                 load_date:null,
                 dt:null,
-                country_code:'TR',
+                country_code:1,
                 xd:null,
             }),
           }
@@ -326,6 +353,13 @@ import 'vue-datetime/dist/vue-datetime.css'
         },
       },
       methods:{
+          getCorp(){
+              var self = this;
+              axios.get('/corp')
+                .then(({data})=>{
+                    self.corps = data;
+                });
+          },
           getProducts(){
               var self = this;
               axios.get('/products')

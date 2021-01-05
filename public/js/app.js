@@ -2184,6 +2184,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2202,7 +2222,14 @@ __webpack_require__.r(__webpack_exports__);
       products: [],
       selected: 0,
       selected_product: [],
+      corps: [],
+      corp: new Form({
+        stakeholderType: null,
+        getAll: false,
+        cityPlate: null
+      }),
       form: new Form({
+        togln: null,
         gtin: null,
         bn: null,
         production_identifier: null,
@@ -2212,7 +2239,7 @@ __webpack_require__.r(__webpack_exports__);
         calibration_unit_id: null,
         load_date: null,
         dt: null,
-        country_code: 'TR',
+        country_code: 1,
         xd: null
       })
     };
@@ -2256,10 +2283,17 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    getCorp: function getCorp() {
+      var self = this;
+      axios.get('/corp').then(function (_ref) {
+        var data = _ref.data;
+        self.corps = data;
+      });
+    },
     getProducts: function getProducts() {
       var self = this;
-      axios.get('/products').then(function (_ref) {
-        var data = _ref.data;
+      axios.get('/products').then(function (_ref2) {
+        var data = _ref2.data;
         self.products = data;
       });
     },
@@ -29984,6 +30018,109 @@ var render = function() {
                       }
                     },
                     [
+                      _c("div", { staticClass: "row" }, [
+                        _c("div", { staticClass: "col-md-4" }, [
+                          _c("div", { staticClass: "form-group" }, [
+                            _c("label", { staticClass: "form-label" }, [
+                              _vm._v("Kurum Tipi")
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.corp.stakeholderType,
+                                    expression: "corp.stakeholderType"
+                                  }
+                                ],
+                                on: {
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.$set(
+                                      _vm.corp,
+                                      "stakeholderType",
+                                      $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    )
+                                  }
+                                }
+                              },
+                              [
+                                _c("option", { attrs: { value: "hastane" } }, [
+                                  _vm._v("Hastane")
+                                ]),
+                                _vm._v(" "),
+                                _c("option", { attrs: { value: "uretici" } }, [
+                                  _vm._v("Üretici")
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "option",
+                                  { attrs: { value: "ihracatci" } },
+                                  [_vm._v("İhracatçı")]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "option",
+                                  { attrs: { value: "geriodemekurumu" } },
+                                  [_vm._v("Geri Ödeme Kurumu")]
+                                )
+                              ]
+                            )
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-md-4" }),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-md-4" })
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { staticClass: "form-label" }, [
+                          _vm._v("TOGLN")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.togln,
+                              expression: "form.togln"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: { type: "text" },
+                          domProps: { value: _vm.form.togln },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.form, "togln", $event.target.value)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.form.errors.has("togln")
+                          ? _c("span", { staticClass: "text-danger" }, [
+                              _vm._v("TOGLN Zorunlu alan")
+                            ])
+                          : _vm._e()
+                      ]),
+                      _vm._v(" "),
                       _c(
                         "div",
                         {

@@ -11,6 +11,7 @@ Auth::routes();
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/', [App\Http\Controllers\ProductDeclarationController::class, 'index'])->name('declare');
+Route::get('/hastane', [App\Http\Controllers\CorporationController::class, 'index'])->name('declare');
 Route::post('/', [App\Http\Controllers\ProductDeclarationController::class, 'store'])->name('store-declare');
 Route::get('/products', [App\Http\Controllers\ProductController::class, 'index'])->name('list');
 Route::get('/products-cancel', [App\Http\Controllers\ProductCancelController::class, 'index'])->name('cancel');
