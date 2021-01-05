@@ -59,7 +59,7 @@
                         </div>
                         <ul id="js-nav-menu" class="nav-menu">
                             <li class="active">
-                                <a href="blank.html" title="Ürünler" data-filter-tags="blank page">
+                                <a href="/" title="Ürünler" data-filter-tags="blank page">
                                     <i class="fal fa-globe"></i>
                                     <span class="nav-link-text" data-i18n="nav.blankpage">Ürünler</span>
                                 </a>

@@ -25,7 +25,9 @@
     },
     "dependencies": {
         "luxon": "^1.25.0",
+        "sweetalert2": "^10.13.0",
         "vue-datetime": "^1.0.0-beta.14",
+        "vue-select": "^3.11.2",
         "weekstart": "^1.0.1"
     }
 }

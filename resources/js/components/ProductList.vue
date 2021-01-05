@@ -96,19 +96,16 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class='form-label'>İl</label>
-                                            <select v-model='corp.cityPlate' class="form-control" @change="getCorp()">
-                                                <option value="">Secin</option>
-                                                <option v-for='city in cities' :value='city.code'>{{ city.city }}</option>
-                                            </select>
+                                            <v-select label="city" v-model="corp.cityPlate" :options="cities"></v-select>
                                             <span class="text-danger" v-if="corp.errors.has('cityPlate')">İl zorunlu alan</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class='form-label'>Kurum</label>
-                                    <select v-model="form.togln" class="form-control">
-                                        <option v-for='corp in corps' :value='corp.gln'>{{ corp.companyName }}</option>
-                                    </select>
+                                    <span v-if="loading"><i class="fal fa-cog fa-2x fa-spin"></i></span>
+                                    <v-select v-else label="companyName" v-model="form.togln" :options="corps"></v-select>
+
                                     <span class="text-danger" v-if="form.errors.has('togln')">TOGLN Zorunlu alan</span>
                                 </div>
                                 <div class="row" style="margin-bottom:20px;">
@@ -302,7 +299,11 @@
     </div>
 </template>
 <script>
-
+import vSelect from 'vue-select'
+Vue.component('v-select', vSelect)
+import 'vue-select/dist/vue-select.css';
+import Swal from 'sweetalert2/dist/sweetalert2.js'
+import 'sweetalert2/src/sweetalert2.scss'
 import { Datetime } from 'vue-datetime'
 import 'vue-datetime/dist/vue-datetime.css'
     export default {
@@ -328,7 +329,11 @@ import 'vue-datetime/dist/vue-datetime.css'
             corp:new Form({
                 stakeholderType:'hastane',
                 getAll:false,
-                cityPlate:'06',
+                cityPlate:{
+                    city:"Ankara",
+                    code:"06",
+                    id:6,
+                },
             }),
             form:new Form({
                 togln:null,
@@ -369,10 +374,19 @@ import 'vue-datetime/dist/vue-datetime.css'
       methods:{
           getCorp(){
             var self = this;
+
             if(this.corp.cityPlate !== '' && this.corp.stakeholderType !== ''){
-                axios.post('/corp',{stakeholderType:this.corp.stakeholderType,cityPlate:this.corp.cityPlate})
+                this.loading = 1;
+                axios.post('/corp',{stakeholderType:this.corp.stakeholderType,cityPlate:this.corp.cityPlate.code})
                     .then(function(data){
                         self.corps = data.data;
+                        self.loading = 0;
+                        // Swal.fire({
+                        //     title: 'Error!',
+                        //     text: 'Do you want to continue',
+                        //     icon: 'success',
+                        //     confirmButtonText: 'Cool'
+                        // })
                     });
             }
           },
