@@ -7,9 +7,21 @@ use Carbon\Carbon;
 
 class ProductDeclarationController extends Controller
 {
+    private $codes;
+
     public function __construct()
     {
         $this->middleware('auth');
+        $this->codes = [
+            '00000' => 'Ürün üzerinde gerçekleştirilen işlem başarılıdır.',
+            '11005' => 'Bu ürüne ait bildirim yapma yetkiniz yok',
+            '10204' => 'Belirtilen ürün daha önce satılmış',
+            '10202' => 'Ürünün Son Kullanma Tarihi geçmiştir',
+            '11004' => 'Yanlış GTIN numarası',
+            '10206' => 'Veri tabanı kayıt hatası',
+            '10201' => 'Belirtilen ürün sistemde kayıtlı değil',
+            '15029' => 'Geçersiz (Kalibrasyon/Yüklenen Aktivite) birim değeri',
+        ];
     }
 
     public function index()
@@ -19,6 +31,7 @@ class ProductDeclarationController extends Controller
 
     public function store()
     {
+        $response = [];
         $data = request()->validate([
             'cityPlate' => 'required',
             'stakeholderType' => 'required',
@@ -43,8 +56,15 @@ class ProductDeclarationController extends Controller
         $data['load_date'] = Carbon::parse(request('load_date'))->format('Y-m-d');
         $data['xd'] = Carbon::parse(request('xd'))->format('Y-m-d');
         $code = $this->addITS($data);
+        if ($code === '00000') {
+            Products::create($data);
+            $response['status'] = 1;
+        } else {
+            $response['status'] = 0;
+            $responce['message'] = $this->codes[$code];
+        }
 
-        Products::create($data);
+        return $response;
     }
 
     private function addITS($data)
