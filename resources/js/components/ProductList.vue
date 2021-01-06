@@ -84,20 +84,20 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class='form-label'>Kurum Tipi</label>
-                                            <select v-model='corp.stakeholderType' class="form-control" @change="getCorp()">
+                                            <select v-model='form.stakeholderType' class="form-control" @change="getCorp()">
                                                 <option value="hastane">Hastane</option>
                                                 <option value="uretici">Üretici</option>
                                                 <option value="ihracatci">İhracatçı</option>
                                                 <option value="geriodemekurumu">Geri Ödeme Kurumu</option>
                                             </select>
-                                            <span class="text-danger" v-if="corp.errors.has('stakeholderType')">Kurum Tipi zorunlu alan</span>
+                                            <span class="text-danger" v-if="form.errors.has('stakeholderType')">Kurum Tipi zorunlu alan</span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class='form-label'>İl</label>
-                                            <v-select label="city" v-model="corp.cityPlate" :options="cities"></v-select>
-                                            <span class="text-danger" v-if="corp.errors.has('cityPlate')">İl zorunlu alan</span>
+                                            <v-select label="city" v-model="form.cityPlate" :options="cities"></v-select>
+                                            <span class="text-danger" v-if="form.errors.has('cityPlate')">İl zorunlu alan</span>
                                         </div>
                                     </div>
                                 </div>
@@ -326,7 +326,8 @@ import 'vue-datetime/dist/vue-datetime.css'
             selected_product:[],
             cities:[],
             corps:[],
-            corp:new Form({
+
+            form:new Form({
                 stakeholderType:'hastane',
                 getAll:false,
                 cityPlate:{
@@ -334,8 +335,6 @@ import 'vue-datetime/dist/vue-datetime.css'
                     code:"06",
                     id:6,
                 },
-            }),
-            form:new Form({
                 togln:null,
                 gtin:null,
                 bn:null,
@@ -375,18 +374,12 @@ import 'vue-datetime/dist/vue-datetime.css'
           getCorp(){
             var self = this;
 
-            if(this.corp.cityPlate !== '' && this.corp.stakeholderType !== ''){
+            if(this.form.cityPlate !== '' && this.form.stakeholderType !== ''){
                 this.loading = 1;
-                axios.post('/corp',{stakeholderType:this.corp.stakeholderType,cityPlate:this.corp.cityPlate.code})
+                axios.post('/corp',{stakeholderType:this.form.stakeholderType,cityPlate:this.form.cityPlate.code})
                     .then(function(data){
                         self.corps = data.data;
                         self.loading = 0;
-                        // Swal.fire({
-                        //     title: 'Error!',
-                        //     text: 'Do you want to continue',
-                        //     icon: 'success',
-                        //     confirmButtonText: 'Cool'
-                        // })
                     });
             }
           },

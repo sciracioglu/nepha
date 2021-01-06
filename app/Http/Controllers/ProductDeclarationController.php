@@ -20,6 +20,8 @@ class ProductDeclarationController extends Controller
     public function store()
     {
         $data = request()->validate([
+            'cityPlate' => 'required',
+            'stakeholderType' => 'required',
             'togln' => 'required',
             'gtin' => 'required',
             'bn' => 'required',
@@ -33,9 +35,15 @@ class ProductDeclarationController extends Controller
             'country_code' => 'required',
             'xd' => 'required',
         ]);
+        $data['city'] = $data['cityPlate']['city'];
+        $data['plate'] = $data['cityPlate']['code'];
+        $data['corp'] = $data['togln']['companyName'];
+        $data['togln'] = $data['togln']['gln'];
+        unset($data['cityPlate']);
         $data['load_date'] = Carbon::parse(request('load_date'))->format('Y-m-d');
         $data['xd'] = Carbon::parse(request('xd'))->format('Y-m-d');
-        $this->addITS($data);
+        $code = $this->addITS($data);
+
         Products::create($data);
     }
 
@@ -89,10 +97,8 @@ class ProductDeclarationController extends Controller
 
         curl_close($curl);
         $clean_xml = str_ireplace(['SOAP-ENV:', 'SOAP:', 's:'], '', $response);
-        dump($clean_xml);
-        dump('---');
+        libxml_use_internal_errors(true);
         $xml = json_decode(json_encode(simplexml_load_string($clean_xml)), true);
-        dump($xml);
         $sso_code = $xml['Body'];
         dd($sso_code);
     }

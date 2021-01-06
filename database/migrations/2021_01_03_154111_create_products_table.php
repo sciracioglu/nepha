@@ -15,6 +15,11 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->string('stakeholderType');
+            $table->string('city');
+            $table->string('plate');
+            $table->string('togln');
+            $table->string('corp');
             $table->string('gtin');
             $table->string('bn');
             $table->string('production_identifier');
