@@ -6,6 +6,11 @@ use App\Models\PlateCode;
 
 class CorporationController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
         $data = request()->validate([

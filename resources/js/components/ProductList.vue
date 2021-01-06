@@ -291,6 +291,14 @@
                                     </tr>
                                 </tbody>
                             </table>
+                           <div class="row">
+                                <div class="col-md-6"></div>
+                                    <div class="col-md-6" style="text-align: right;">
+                                    <button type="button" @click='cancel()' class="btn btn-danger btn-lg btn-icon rounded-circle hover-effect-dot waves-effect waves-themed">
+                                        <i class="fal fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -326,7 +334,6 @@ import 'vue-datetime/dist/vue-datetime.css'
             selected_product:[],
             cities:[],
             corps:[],
-
             form:new Form({
                 stakeholderType:'hastane',
                 getAll:false,
@@ -399,14 +406,46 @@ import 'vue-datetime/dist/vue-datetime.css'
           },
           saveProduct(){
               var self = this;
+              let plates = this.form.cityPlate;
               this.form.post('/')
-                .then(function(){
+                .then(function(data){
+                    self.form.cityPlate = plates;
+                    self.sonuc(data.status, data.message);
                     self.getProducts();
                 })
           },
           detail(product){
               this.selected_product = product;
               this.selected = 1;
+          },
+          sonuc(status,message){
+              Swal.fire({
+                icon: status ? 'success' : 'error',
+                title: message,
+                showConfirmButton: false,
+                timer: 2500
+            })
+          },
+          cancel(){
+
+              var self = this;
+              Swal.fire({
+                title: 'Emin misniz?',
+                text: "Ürün İptal Edilecek!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Evet !',
+                cancelButtonText: 'Hayır'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        axios.delete('/' + this.selected_product.id)
+                            .then(({data})=>{
+                                self.sonuc(data.status, data.message);
+                            });
+                    }
+                });
           }
       }
     }

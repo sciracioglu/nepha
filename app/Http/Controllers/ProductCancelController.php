@@ -8,4 +8,6 @@ class ProductCancelController extends Controller
     {
         $this->middleware('auth');
     }
+
+    
 }

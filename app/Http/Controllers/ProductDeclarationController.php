@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Products;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ProductDeclarationController extends Controller
 {
@@ -55,22 +56,38 @@ class ProductDeclarationController extends Controller
         unset($data['cityPlate']);
         $data['load_date'] = Carbon::parse(request('load_date'))->format('Y-m-d');
         $data['xd'] = Carbon::parse(request('xd'))->format('Y-m-d');
-        $code = $this->addITS($data);
-        if ($code === '00000') {
-            Products::create($data);
+        [$data['response_json'],$data['bildirim_id'], $data['uc']] = $this->addITS($data);
+        Products::create($data);
+        $response['status'] = 0;
+        if ($data['uc'] == '00000') {
             $response['status'] = 1;
-        } else {
-            $response['status'] = 0;
-            $responce['message'] = $this->codes[$code];
         }
+        $response['message'] = $this->codes[$data['uc']];
 
         return $response;
     }
 
-    private function addITS($data)
+    public function destroy($id)
+    {
+        $data = Products::find($id);
+        [$bildirim_id, $uc] = $this->cancel($data);
+        $response['status'] = 0;
+        if ($uc === '00000') {
+            $response['status'] = 1;
+            $data->update([
+                'cancel_date' => date('Y-m-d H:i:s'),
+                'cancel_user' => Auth::user()->id,
+                'cancel_bildirim_id' => $bildirim_id,
+            ]);
+        }
+        $response['message'] = $this->codes[$uc];
+
+        return $response;
+    }
+
+    private function addITS(array $data): array
     {
         $curl = curl_init();
-
         curl_setopt_array($curl, [
             CURLOPT_URL => 'https://its.saglik.gov.tr/RadyofarmasotikBildirim/RadyofarmasotikBildirimReceiverService?wsdl',
             CURLOPT_RETURNTRANSFER => true,
@@ -112,14 +129,62 @@ class ProductDeclarationController extends Controller
                 'Cookie: NSC_WT-MC-L12OFU=ffffffff09081e1545525d5f4f58455e445a4a423660'
             ],
         ]);
-
         $response = curl_exec($curl);
-
         curl_close($curl);
         $clean_xml = str_ireplace(['SOAP-ENV:', 'SOAP:', 's:'], '', $response);
         libxml_use_internal_errors(true);
         $xml = json_decode(json_encode(simplexml_load_string($clean_xml)), true);
-        $sso_code = $xml['Body'];
-        dd($sso_code);
+        //dd($xml);
+        $bildirim_id = $xml['Body']['ns2:RadyofarmaResponse']['BILDIRIMID'];
+        $uc = $xml['Body']['ns2:RadyofarmaResponse']['URUNLER']['BNDURUM']['UC'];
+        $response_json = json_encode($xml['Body'], JSON_UNESCAPED_UNICODE);
+
+        return [$response_json, $bildirim_id, $uc];
+    }
+
+    private function cancel($data)
+    {
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+            CURLOPT_URL => 'https://its.saglik.gov.tr/RadyofarmasotikIptalBildirim/RadyofarmasotikIptalBildirimReceiverService?wsdl',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_USERPWD => '86989140000120000:Nepha*2019',
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"
+                xmlns:rad=\"http://its.iegm.gov.tr/bildirim/BR/v1/RadyofarmaIptal\">\n
+            <soapenv:Header/>\n
+            <soapenv:Body>\n
+               <rad:RadyofarmaIptal>\n
+                  <TOGLN>{$data['togln']}</TOGLN>\n
+                  <URUNLER>\n
+                     <URUN>\n
+                        <GTIN>{$data['gtin']}</GTIN>\n
+                        <BN>{$data['bn']}</BN>\n
+                        <LOAD_DATE>{$data['load_date']}</LOAD_DATE>\n
+                     </URUN>\n
+                  </URUNLER>\n
+               </rad:RadyofarmaIptal>\n
+            </soapenv:Body>\n
+         </soapenv:Envelope>",
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: text/xml',
+                'SOAPAction: http://tempuri.org/RadyosformatikIptal/SSO',
+                'Cookie: NSC_WT-MC-L12OFU=ffffffff09081e1545525d5f4f58455e445a4a423660'
+            ],
+        ]);
+        $response = curl_exec($curl);
+        curl_close($curl);
+        $clean_xml = str_ireplace(['SOAP-ENV:', 'SOAP:', 's:'], '', $response);
+        libxml_use_internal_errors(true);
+        $xml = json_decode(json_encode(simplexml_load_string($clean_xml)), true);
+        $bildirim_id = $xml['Body']['ns2:RadyofarmaIptalResponse']['BILDIRIMID'];
+        $uc = $xml['Body']['ns2:RadyofarmaIptalResponse']['URUNLER']['BNDURUM']['UC'];
+
+        return [$bildirim_id, $uc];
     }
 }

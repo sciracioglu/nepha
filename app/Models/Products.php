@@ -17,7 +17,7 @@ class Products extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->created_by = Auth::user()->id;
+            $model->created_user = Auth::user()->id;
         });
     }
 }

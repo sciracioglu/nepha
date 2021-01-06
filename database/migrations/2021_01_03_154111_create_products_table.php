@@ -28,15 +28,25 @@ class CreateProductsTable extends Migration
             $table->float('calibration_activity', 10, 2);
             $table->integer('calibration_unit_id');
             $table->date('load_date');
-            $table->integer('dt');
+            $table->string('dt', 1);
             $table->string('country_code', 3);
             $table->date('xd');
             $table->string('uc', 5);
-            $table->dateTime('cancel_date');
-            $table->integer('cancel_user');
-            $table->integer('created_by');
-            $table->integer('updated_by');
+            $table->bigInteger('bildirim_id');
+            $table->text('response_json')->nullable();
+            $table->unsignedBigInteger('created_user');
+            $table->timestamp('cancel_date')->nullable();
+            $table->unsignedBigInteger('cancel_user')->nullable();
+            $table->bigInteger('cancel_bildirim_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('created_user')
+                ->references('id')
+                ->on('users');
+
+            $table->foreign('cancel_user')
+                ->references('id')
+                ->on('users');
         });
     }
 

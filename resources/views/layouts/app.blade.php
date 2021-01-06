@@ -101,19 +101,20 @@
                             </a>
                         </div>
                         <div class="ml-auto d-flex">
-                            <div>
+
                                 @guest
                                     @if (Route::has('login'))
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                        </li>
+                                        <div>
+                                            <a class="header-icon" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                        </div>
                                     @endif
                                     @if (Route::has('register'))
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                        </li>
+                                        <div>
+                                            <a class="header-icon" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                        </div>
                                     @endif
                                 @else
+                                <div>
                                     <a href="#" data-toggle="dropdown" title="{{ Auth::user()->email }}" class="header-icon d-flex align-items-center justify-content-center ml-2">
                                         <!-- <img src="img/demo/avatars/avatar-admin.png" class="profile-image rounded-circle" alt="Serkan Çıracıoğlu"> -->
                                         {{ Auth::user()->name }}
@@ -139,8 +140,9 @@
                                             @csrf
                                         </form>
                                     </div>
+                                </div>
                                 @endguest
-                            </div>
+
                         </div>
                     </header>
                     <main id="app" role="main" class="page-content">
