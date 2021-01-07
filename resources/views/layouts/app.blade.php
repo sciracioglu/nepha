@@ -28,10 +28,7 @@
                 <aside class="page-sidebar">
                     <div class="page-logo">
                         <a href="#" class="page-logo-link press-scale-down d-flex align-items-center position-relative" data-toggle="modal" data-target="#modal-shortcut">
-                            <img src="img/logo.png" alt="NEPHA" aria-roledescription="logo">
-                            <span class="page-logo-text mr-1">NEPHA</span>
-                            <span class="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span>
-                            <i class="fal fa-angle-down d-inline-block ml-1 fs-lg color-primary-300"></i>
+                            <img src="img/nepha.png" alt="NEPHA" aria-roledescription="logo" style="width: 220px; height: auto;">
                         </a>
                     </div>
                     <!-- BEGIN PRIMARY NAVIGATION -->
@@ -53,15 +50,31 @@
                                 </a>
                             </div>
                             <img src="img/card-backgrounds/cover-2-lg.png" class="cover" alt="cover">
-                            <a href="#" onclick="return false;" class="pull-trigger-btn" data-action="toggle" data-class="list-filter-active" data-target=".page-sidebar" data-focus="nav_filter_input">
-                                <i class="fal fa-angle-down"></i>
-                            </a>
+
                         </div>
                         <ul id="js-nav-menu" class="nav-menu">
+                            <li>
+                                <a href="/" title="Dashboard">
+                                    <i class="fal fa-analytics"></i>
+                                    <span class="nav-link-text" data-i18n="nav.blankpage">Dashboard</span>
+                                </a>
+                            </li>
                             <li class="active">
-                                <a href="/" title="Ürünler" data-filter-tags="blank page">
-                                    <i class="fal fa-globe"></i>
+                                <a href="/" title="Satış">
+                                    <i class="fal fa-handshake"></i>
+                                    <span class="nav-link-text" data-i18n="nav.blankpage">Satış</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/" title="Satış">
+                                    <i class="fal fa-flask"></i>
                                     <span class="nav-link-text" data-i18n="nav.blankpage">Ürünler</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/" title="Kullanıcılar">
+                                    <i class="fal fa-users"></i>
+                                    <span class="nav-link-text" data-i18n="nav.blankpage">Kullanıcılar</span>
                                 </a>
                             </li>
                         </ul>
@@ -148,7 +161,7 @@
                     <main id="app" role="main" class="page-content">
                         <div class="subheader">
                             <h1 class="subheader-title">
-                                <i class='subheader-icon fal fa-globe'></i> @yield('title')
+                                @yield('title')
                                 <span class='fw-300'>@yield('sub_title')</span>
                             </h1>
                         </div>

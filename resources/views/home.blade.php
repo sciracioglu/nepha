@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title')
-Ürünler
+<i class="fal fa-handshake"></i> Satış
 @endsection
 
 @section('content')
