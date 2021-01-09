@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PlateCode;
+use App\Models\Country;
 
-class CityController extends Controller
+class CountryController extends Controller
 {
     public function __construct()
     {
@@ -13,6 +13,6 @@ class CityController extends Controller
 
     public function index()
     {
-        return PlateCode::orderBy('code')->get();
+        return Country::orderBy('country')->get();
     }
 }

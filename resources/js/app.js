@@ -17,6 +17,8 @@ Vue.component('datetime', Datetime);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('product-list', require('./components/ProductList.vue').default);
+Vue.component('medicine', require('./components/Medicine.vue').default);
+Vue.component('user', require('./components/User.vue').default);
 
 const app = new Vue({
     el: '#app',

@@ -6,23 +6,25 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
-class Products extends Model
+class Medicine extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $primary = 'gtin';
+    protected $fillable = [
+        'gtin',
+        'medicine',
+        'user_id',
+        'created_at',
+        'updated_at'
+    ];
 
     public static function boot()
     {
         parent::boot();
 
         static::creating(function ($model) {
-            $model->created_user = Auth::user()->id;
+            $model->user_id = Auth::user()->id;
         });
-    }
-
-    public function medicine()
-    {
-        return $this->hasMany(Medicine::class, 'gtin', 'gtin');
     }
 }

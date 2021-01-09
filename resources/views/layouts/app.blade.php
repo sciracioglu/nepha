@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <title>
-            NEPHA  - @yield('title')
+            NEPHA
         </title>
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <script src="{{ asset('js/app.js') }}" defer></script>
@@ -14,13 +14,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, minimal-ui">
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="msapplication-tap-highlight" content="no">
-        <link id="vendorsbundle" rel="stylesheet" media="screen, print" href="css/vendors.bundle.css">
-        <link id="appbundle" rel="stylesheet" media="screen, print" href="css/app.bundle.css">
+        <link id="vendorsbundle" rel="stylesheet" media="screen, print" href="{{ asset('css/vendors.bundle.css') }}">
+        <link id="appbundle" rel="stylesheet" media="screen, print" href="{{ asset('css/app.bundle.css') }}">
         <link id="mytheme" rel="stylesheet" media="screen, print" href="#">
-        <link id="myskin" rel="stylesheet" media="screen, print" href="css/skins/skin-master.css">
-        <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
-        <link rel="mask-icon" href="img/favicon/safari-pinned-tab.svg" color="#5bbad5">
+        <link id="myskin" rel="stylesheet" media="screen, print" href="{{ asset('css/skins/skin-master.css') }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('img/favicon/apple-touch-icon.png') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/favicon/favicon-32x32.png') }}">
+        <link rel="mask-icon" href="{{ asset('img/favicon/safari-pinned-tab.svg') }}" color="#5bbad5">
     </head>
     <body class="mod-bg-1 ">
         <div class="page-wrapper">
@@ -28,7 +28,7 @@
                 <aside class="page-sidebar">
                     <div class="page-logo">
                         <a href="#" class="page-logo-link press-scale-down d-flex align-items-center position-relative" data-toggle="modal" data-target="#modal-shortcut">
-                            <img src="img/nepha.png" alt="NEPHA" aria-roledescription="logo" style="width: 220px; height: auto;">
+                            <img src="{{ asset('img/nepha.png') }}" alt="NEPHA" aria-roledescription="logo" style="width: 220px; height: auto;">
                         </a>
                     </div>
                     <!-- BEGIN PRIMARY NAVIGATION -->
@@ -44,35 +44,33 @@
                         <div class="info-card">
                             <div class="info-card-text text-center">
                                 <a href="#" class="d-flex align-items-center text-white">
-                                    <span class="text-truncate text-truncate-sm d-inline-block">
-                                    {{ Auth::user()->name ?? '' }}
-                                    </span>
+
                                 </a>
                             </div>
-                            <img src="img/card-backgrounds/cover-2-lg.png" class="cover" alt="cover">
+                            <img src="{{ asset('img/card-backgrounds/cover-2-lg.png') }}" class="cover" alt="cover">
 
                         </div>
                         <ul id="js-nav-menu" class="nav-menu">
-                            <li>
+                            <li class="{{ Request::is('/') ? 'active' : '' }}">
                                 <a href="/" title="Dashboard">
                                     <i class="fal fa-analytics"></i>
                                     <span class="nav-link-text" data-i18n="nav.blankpage">Dashboard</span>
                                 </a>
                             </li>
-                            <li class="active">
-                                <a href="/" title="Satış">
+                            <li class="{{ Request::is('sale') ? 'active' : '' }}">
+                                <a href="/sale" title="Satış">
                                     <i class="fal fa-handshake"></i>
                                     <span class="nav-link-text" data-i18n="nav.blankpage">Satış</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="/" title="Satış">
+                            <li class="{{ Request::is('medicine') ? 'active' : '' }}">
+                                <a href="/medicine" title="Satış">
                                     <i class="fal fa-flask"></i>
                                     <span class="nav-link-text" data-i18n="nav.blankpage">Ürünler</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="/" title="Kullanıcılar">
+                            <li class="{{ Request::is('user') ? 'active' : '' }}">
+                                <a href="/user" title="Kullanıcılar">
                                     <i class="fal fa-users"></i>
                                     <span class="nav-link-text" data-i18n="nav.blankpage">Kullanıcılar</span>
                                 </a>

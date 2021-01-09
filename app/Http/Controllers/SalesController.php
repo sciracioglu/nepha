@@ -6,7 +6,7 @@ use App\Models\Products;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
-class ProductDeclarationController extends Controller
+class SalesController extends Controller
 {
     private $codes;
 
@@ -27,7 +27,7 @@ class ProductDeclarationController extends Controller
 
     public function index()
     {
-        return view('home');
+        return view('sale');
     }
 
     public function store()
@@ -39,7 +39,6 @@ class ProductDeclarationController extends Controller
             'togln' => 'required',
             'gtin' => 'required',
             'bn' => 'required',
-            'production_identifier' => 'required',
             'loaded_activity' => 'required',
             'loaded_unit_id' => 'required',
             'calibration_activity' => 'required',
@@ -53,6 +52,8 @@ class ProductDeclarationController extends Controller
         $data['plate'] = $data['cityPlate']['code'];
         $data['corp'] = $data['togln']['companyName'];
         $data['togln'] = $data['togln']['gln'];
+        $data['country_code'] = $data['country_code']['code2'];
+        $data['gtin'] = $data['gtin']['gtin'];
         unset($data['cityPlate']);
         $data['load_date'] = Carbon::parse(request('load_date'))->format('Y-m-d');
         $data['xd'] = Carbon::parse(request('xd'))->format('Y-m-d');

@@ -68,7 +68,7 @@
                 <div class="panel" v-if='products.length === 0 || new_form && selected === 0' v-cloak>
                     <div class="panel-hdr">
                         <h2>Yeni Ürün Tanımı</h2>
-                        <div class="panel-toolbar">
+                        <div class="panel-toolbar" v-if='products.length > 0'>
                             <button type="button" @click="new_form = 0" data-action="panel-close" class="btn btn-sm btn-danger mr-2 btn-icon waves-effect waves-themed">
                                 <i class="fal fa-times"></i>
                             </button>
@@ -81,7 +81,7 @@
                                 @change="form.errors.clear()"
                                 >
                                 <div class="row" style="margin-bottom:20px;">
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label class='form-label'>Kurum Tipi</label>
                                             <select v-model='form.stakeholderType' class="form-control" @change="getCorp()">
@@ -93,53 +93,54 @@
                                             <span class="text-danger" v-if="form.errors.has('stakeholderType')">Kurum Tipi zorunlu alan</span>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label class='form-label'>İl</label>
                                             <v-select label="city" v-model="form.cityPlate" :options="cities"></v-select>
                                             <span class="text-danger" v-if="form.errors.has('cityPlate')">İl zorunlu alan</span>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class='form-label'>Kurum</label>
-                                    <span v-if="loading"><i class="fal fa-cog fa-2x fa-spin"></i></span>
-                                    <v-select v-else label="companyName" v-model="form.togln" :options="corps"></v-select>
-
-                                    <span class="text-danger" v-if="form.errors.has('togln')">TOGLN Zorunlu alan</span>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class='form-label'>Kurum</label>
+                                            <span v-if="loading"><i class="fal fa-cog fa-2x fa-spin"></i></span>
+                                            <v-select v-else label="companyName" v-model="form.togln" :options="corps"></v-select>
+                                            <span class="text-danger" v-if="form.errors.has('togln')">TOGLN Zorunlu alan</span>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="row" style="margin-bottom:20px;">
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <div class="form-group">
-                                            <label class='form-label'>GTIN</label>
-                                            <input type="text" v-model="form.gtin" class="form-control" />
+                                            <label class='form-label'>Ürün</label>
+                                            <v-select v-model='form.gtin' :options='medicines' label='medicine' />
                                             <span class="text-danger" v-if="form.errors.has('gtin')">GTIN Zorunlu alan</span>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label class='form-label'>Parti No</label>
                                             <input type="text" v-model="form.bn" class="form-control" />
                                             <span class="text-danger" v-if="form.errors.has('bn')">BN Zorunlu alan</span>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label class='form-label'>Üretim Tesisi</label>
                                             <input type="text" v-model="form.production_identifier" class="form-control" />
-                                            <span class="text-danger" v-if="form.errors.has('production_identifier')">Üretim Tesisi Zorunlu alan</span>
+
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row" style="margin-bottom:20px;">
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                         <label class='form-label'>Yüklenen Aktivite</label>
                                             <input type="text" v-model="form.loaded_activity" class="form-control" />
                                             <span class="text-danger" v-if="form.errors.has('loaded_activity')">Yüklenen Aktivite Zorunlu alan</span>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label class='form-label'>Yüklenen Aktivite Birimi</label>
                                             <select v-model="form.loaded_unit_id" class="form-control">
@@ -153,39 +154,37 @@
                                             <span class="text-danger" v-if="form.errors.has('loaded_unit_id')">Yüklenen Aktivite Birimi Zorunlu alan</span>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row" style="margin-bottom:20px;">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class='form-label'>Hedeflenen Aktivite</label>
-                                        <input type="text" v-model="form.calibration_activity" class="form-control" />
-                                        <span class="text-danger" v-if="form.errors.has('calibration_activity')">Hedeflenen Aktivite Zorunlu alan</span>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class='form-label'>Hedeflenen Aktivite</label>
+                                            <input type="text" v-model="form.calibration_activity" class="form-control" />
+                                            <span class="text-danger" v-if="form.errors.has('calibration_activity')">Hedeflenen Aktivite Zorunlu alan</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                                <label class='form-label'>Hedeflenen Aktivite Birimi</label>
+                                            <select v-model="form.calibration_unit_id" class="form-control">
+                                                <option>Seçin</option>
+                                                <option value="1">&#181;ci</option>
+                                                <option value="2">mci</option>
+                                                <option value="3">mbq</option>
+                                                <option value="4">gbq</option>
+                                                <option value="5">kutu</option>
+                                            </select>
+                                            <span class="text-danger" v-if="form.errors.has('calibration_unit_id')">Hedeflenen Aktivite Birimi Zorunlu alan</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                            <label class='form-label'>Hedeflenen Aktivite Birimi</label>
-                                        <select v-model="form.calibration_unit_id" class="form-control">
-                                            <option>Seçin</option>
-                                            <option value="1">&#181;ci</option>
-                                            <option value="2">mci</option>
-                                            <option value="3">mbq</option>
-                                            <option value="4">gbq</option>
-                                            <option value="5">kutu</option>
-                                        </select>
-                                        <span class="text-danger" v-if="form.errors.has('calibration_unit_id')">Hedeflenen Aktivite Birimi Zorunlu alan</span>
-                                    </div>
-                                </div>
-                                </div>
                                 <div class="row" style="margin-bottom:20px;">
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label class='form-label'>Yükleme Tarihi</label>
                                             <datetime v-model="form.load_date" type="date" input-class="form-control" format="dd/MM/yyyy" :auto='true' :phrases="{ok: 'Tamam', cancel: 'iptal'}" zone="Europe/Istanbul"></datetime>
                                             <span class="text-danger" v-if="form.errors.has('load_date')">Yükleme Tarihi Zorunlu alan</span>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label class='form-label'>DT</label>
                                             <select v-model="form.dt" class="form-control">
@@ -197,16 +196,14 @@
                                             <span class="text-danger" v-if="form.errors.has('dt')">DT Zorunlu alan</span>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row" style="margin-bottom:20px;">
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <div class="form-group">
-                                            <label class='form-label'>Ülke Kodu</label>
-                                            <input type="text" v-model="form.country_code" class="form-control" />
-                                            <span class="text-danger" v-if="form.errors.has('country_code')">Ülke Kodu Zorunlu alan</span>
+                                            <label class='form-label'>Ülke</label>
+                                            <v-select label="country" v-model="form.country_code" :options="countries"></v-select>
+                                            <span class="text-danger" v-if="form.errors.has('country_code')">Ülke Zorunlu alan</span>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label class='form-label'>Son Kullanma Tarihi</label>
                                             <datetime v-model="form.xd" type="date" input-class="form-control" format="dd/MM/yyyy" :auto='true' :phrases="{ok: 'Tamam', cancel: 'iptal'}" zone="Europe/Istanbul"></datetime>
@@ -321,7 +318,9 @@ import 'vue-datetime/dist/vue-datetime.css'
         mounted() {
             this.getProducts();
             this.getCity();
+            this.getCountry();
             this.getCorp();
+            this.getMedicines();
         },
         data(){
           return {
@@ -334,6 +333,8 @@ import 'vue-datetime/dist/vue-datetime.css'
             selected_product:[],
             cities:[],
             corps:[],
+            countries:[],
+            medicines:[],
             form:new Form({
                 stakeholderType:'hastane',
                 getAll:false,
@@ -352,13 +353,17 @@ import 'vue-datetime/dist/vue-datetime.css'
                 calibration_unit_id:null,
                 load_date:null,
                 dt:null,
-                country_code:1,
+                country_code:{
+                    code2:"TR",
+                    code3:"TUR",
+                    country:"Turkey",
+                    id:792,
+                },
                 xd:null,
             }),
           }
       },
       computed:{
-
         filtre:function() {
             return this.products.filter(product => {
                 var letters = { "İ": "i", "I": "ı", "Ş": "ş", "Ğ": "ğ", "Ü": "ü", "Ö": "ö", "Ç": "ç" };
@@ -380,7 +385,6 @@ import 'vue-datetime/dist/vue-datetime.css'
       methods:{
           getCorp(){
             var self = this;
-
             if(this.form.cityPlate !== '' && this.form.stakeholderType !== ''){
                 this.loading = 1;
                 axios.post('/corp',{stakeholderType:this.form.stakeholderType,cityPlate:this.form.cityPlate.code})
@@ -392,10 +396,24 @@ import 'vue-datetime/dist/vue-datetime.css'
           },
           getCity(){
               var self = this;
-              axios.get('/city')
+              axios.get('/cities')
                 .then(({data})=>{
                     self.cities = data;
                 });
+          },
+          getCountry(){
+              var self = this;
+              axios.get('/countries')
+                .then(({data})=>{
+                    self.countries = data;
+                });
+          },
+          getMedicines(){
+              var self = this;
+              axios.get('/medicine-list')
+                  .then(({data})=>{
+                      self.medicines = data;
+                  });
           },
           getProducts(){
               var self = this;
@@ -407,7 +425,7 @@ import 'vue-datetime/dist/vue-datetime.css'
           saveProduct(){
               var self = this;
               let plates = this.form.cityPlate;
-              this.form.post('/')
+              this.form.post('/sale')
                 .then(function(data){
                     self.form.cityPlate = plates;
                     self.sonuc(data.status, data.message);
@@ -427,7 +445,6 @@ import 'vue-datetime/dist/vue-datetime.css'
             })
           },
           cancel(){
-
               var self = this;
               Swal.fire({
                 title: 'Emin misniz?',
@@ -440,7 +457,7 @@ import 'vue-datetime/dist/vue-datetime.css'
                 cancelButtonText: 'Hayır'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        axios.delete('/' + this.selected_product.id)
+                        axios.delete('/sale/' + this.selected_product.id)
                             .then(({data})=>{
                                 self.sonuc(data.status, data.message);
                             });
