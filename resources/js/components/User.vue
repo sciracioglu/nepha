@@ -4,7 +4,8 @@
         <div class="list-group-item" v-for="(user,index) in users" :key="index">
           <div class="row">
             <div class="col-md-4">{{ user.name }}</div>
-            <div class="col-md-7">{{ user.email }}</div>
+            <div class="col-md-4">{{ user.email }}</div>
+            <div class="col-md-3">{{ user.role == 2 ? 'Yönetici' : 'Kullanıcı' }}</div>
             <div class="col-md-1 text-right">
                 <a href="javascript:void(0);" @click="deleteUser(user.id)" class="btn btn-sm btn-danger btn-icon waves-effect waves-themed">
                   <i class="fal fa-trash"></i>
@@ -16,14 +17,23 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
-                <label>Name</label>
+                <label>Kullanıcı Adı</label>
                 <input type="text" class="form-control" v-model='form.name' />
               </div>
             </div>
-            <div class="col-md-7">
+            <div class="col-md-4">
               <div class="form-group">
-                <label>E-mail</label>
+                <label>Mail Adresi</label>
                 <input type="text" class="form-control" v-model='form.email' />
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Yetkisi</label>
+                <select v-model='form.role' class="form-control">
+                  <option value="1">Kullanıcı</option>
+                  <option value="2">Yönetici</option>
+                </select>
               </div>
             </div>
             <div class="col-md-1 text-right">
@@ -49,6 +59,7 @@ export default{
           form:new Form({
             name:null,
             email:null,
+            role:null,
           }),
         }
     },

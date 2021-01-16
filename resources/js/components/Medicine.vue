@@ -1,6 +1,13 @@
 <template>
     <div>
       <div class="list-group">
+        <div class="list-group-item list-group-item-primary">
+          <div class="row">
+            <div class="col-md-4">Barkod</div>
+            <div class="col-md-7">Ürün Adı</div>
+            <div class="col-md-1"></div>
+          </div>
+        </div>
         <div class="list-group-item" v-for="(medicine,index) in medicines" :key="index">
           <div class="row">
             <div class="col-md-4">{{ medicine.gtin }}</div>

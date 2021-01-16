@@ -32,6 +32,7 @@
                         </a>
                     </div>
                     <!-- BEGIN PRIMARY NAVIGATION -->
+                    @if(Auth::user())
                     <nav id="js-primary-nav" class="primary-nav" role="navigation">
                         <div class="nav-filter">
                             <div class="position-relative">
@@ -57,7 +58,8 @@
                                     <span class="nav-link-text" data-i18n="nav.blankpage">Dashboard</span>
                                 </a>
                             </li>
-                            <li class="{{ Request::is('sale') ? 'active' : '' }}">
+                            @if(Auth::user()->role === 2)
+                            <li class="{{ Request::is('sale') ? 'active' : '' }}" >
                                 <a href="/sale" title="Satış">
                                     <i class="fal fa-handshake"></i>
                                     <span class="nav-link-text" data-i18n="nav.blankpage">Satış</span>
@@ -75,9 +77,17 @@
                                     <span class="nav-link-text" data-i18n="nav.blankpage">Kullanıcılar</span>
                                 </a>
                             </li>
+                            @endif
+                            <li class="{{ Request::is('user') ? 'active' : '' }}">
+                                <a href="/reports" title="Raporlar">
+                                    <i class="fal fa-file-chart-line"></i>
+                                    <span class="nav-link-text" data-i18n="nav.blankpage">Raporlar</span>
+                                </a>
+                            </li>
                         </ul>
                         <div class="filter-message js-filter-message bg-success-600"></div>
                     </nav>
+                    @endif
                 </aside>
                 <div class="page-content-wrapper">
                     <header class="page-header" role="banner">

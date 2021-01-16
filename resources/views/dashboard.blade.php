@@ -10,7 +10,7 @@
             <div class="">
                 <h3 class="display-4 d-block l-h-n m-0 fw-500">
                     {!! $user_count !!}
-                    <small class="m-0 l-h-n">kullanıcı kayıtlı</small>
+                    <small class="m-0 l-h-n">son 6 aylık satış sayısı</small>
                 </h3>
             </div>
             <i class="fal fa-user position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1" style="font-size:6rem"></i>
@@ -21,7 +21,7 @@
             <div class="">
                 <h3 class="display-4 d-block l-h-n m-0 fw-500">
                     {!! $medicine_count !!}
-                    <small class="m-0 l-h-n">ürün</small>
+                    <small class="m-0 l-h-n">son 3 aylık satış sayısı</small>
                 </h3>
             </div>
             <i class="fal fa-flask position-absolute pos-right pos-bottom opacity-15  mb-n1 mr-n4" style="font-size: 6rem;"></i>
@@ -65,14 +65,14 @@
   document.addEventListener('DOMContentLoaded', function () {
     Highcharts.chart('container', {
       title: {
-          text: 'Satış Miktarları'
+          text: 'Aylara Göre Satış Miktarları'
       },
       xAxis: {
-          categories: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Plums']
+          categories: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs']
       },
       labels: {
           items: [{
-              html: 'Total fruit consumption',
+
               style: {
                   left: '50px',
                   top: '18px',
@@ -85,20 +85,20 @@
       },
       series: [{
           type: 'column',
-          name: 'Jane',
+          name: 'Ocak',
           data: [3, 2, 1, 3, 4]
       }, {
           type: 'column',
-          name: 'John',
+          name: 'Şubat',
           data: [2, 3, 5, 7, 6]
       }, {
           type: 'column',
-          name: 'Joe',
+          name: 'Mart',
           data: [4, 3, 3, 9, 0],
           color: Highcharts.getOptions().colors[7]
       }, {
           type: 'spline',
-          name: 'Average',
+          name: 'Nisan',
           data: [3, 2.67, 3, 6.33, 3.33],
           marker: {
               lineWidth: 2,
@@ -109,15 +109,15 @@
           type: 'pie',
           name: 'Total consumption',
           data: [{
-              name: 'Jane',
+              name: 'OCTREOSCAN',
               y: 13,
               color: Highcharts.getOptions().colors[0] // Jane's color
           }, {
-              name: 'John',
+              name: 'TECHNESCAN® DMSA',
               y: 23,
               color: Highcharts.getOptions().colors[1] // John's color
           }, {
-              name: 'Joe',
+              name: 'TECHNESCAN® LYOMAA',
               y: 19,
               color: Highcharts.getOptions().colors[4] // Joe's color
           }],
@@ -137,7 +137,7 @@
           type: 'pie'
       },
       title: {
-          text: 'Browser market shares in January, 2018'
+          text: 'Satış yapılan iller'
       },
       tooltip: {
           pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -161,25 +161,25 @@
           name: 'Brands',
           colorByPoint: true,
           data: [{
-              name: 'Chrome',
+              name: 'Ankara',
               y: 61.41,
               sliced: true,
               selected: true,
               color:'#886ab5'
           }, {
-              name: 'Internet Explorer',
+              name: 'İstanbul',
               y: 11.84
           }, {
-              name: 'Firefox',
+              name: 'Bursa',
               y: 10.85
           }, {
-              name: 'Edge',
+              name: 'İzmir',
               y: 4.67
           }, {
-              name: 'Safari',
+              name: 'Adana',
               y: 4.18
           }, {
-              name: 'Other',
+              name: 'Diğer',
               y: 7.05
           }]
       }]

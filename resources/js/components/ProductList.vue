@@ -67,7 +67,7 @@
                 </div>
                 <div class="panel" v-if='products.length === 0 || new_form && selected === 0' v-cloak>
                     <div class="panel-hdr">
-                        <h2>Yeni Ürün Tanımı</h2>
+                        <h2>İTS'ye Bildir</h2>
                         <div class="panel-toolbar" v-if='products.length > 0'>
                             <button type="button" @click="new_form = 0" data-action="panel-close" class="btn btn-sm btn-danger mr-2 btn-icon waves-effect waves-themed">
                                 <i class="fal fa-times"></i>
@@ -206,7 +206,8 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class='form-label'>Son Kullanma Tarihi</label>
-                                            <datetime v-model="form.xd" type="date" input-class="form-control" format="dd/MM/yyyy" :auto='true' :phrases="{ok: 'Tamam', cancel: 'iptal'}" zone="Europe/Istanbul"></datetime>
+
+                                            <datetime v-model="form.xd" type="datetime" :minute-step="5" input-class="form-control" format="dd/MM/yyyy HH:mm" :auto='true' :phrases="{ok: 'Tamam', cancel: 'iptal'}" zone="Europe/Istanbul"></datetime>
                                             <span class="text-danger" v-if="form.errors.has('xd')">Son Kullanma Tarihi Zorunlu alan</span>
                                         </div>
                                     </div>
@@ -352,7 +353,7 @@ import 'vue-datetime/dist/vue-datetime.css'
                 calibration_activity:null,
                 calibration_unit_id:null,
                 load_date:null,
-                dt:null,
+                dt:"I",
                 country_code:{
                     code2:"TR",
                     code3:"TUR",
