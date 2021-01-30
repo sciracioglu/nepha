@@ -68,7 +68,13 @@
                             <li class="{{ Request::is('medicine') ? 'active' : '' }}">
                                 <a href="/medicine" title="Satış">
                                     <i class="fal fa-flask"></i>
-                                    <span class="nav-link-text" data-i18n="nav.blankpage">Ürünler</span>
+                                    <span class="nav-link-text" data-i18n="nav.blankpage">Tanımlar</span>
+                                </a>
+                            </li>
+                            <li class="{{ Request::is('group-dephinition') ? 'active' : '' }}">
+                                <a href="/group-dephinition" title="Satış">
+                                    <i class="fal fa-flask"></i>
+                                    <span class="nav-link-text" data-i18n="nav.blankpage">Grup Tanımları</span>
                                 </a>
                             </li>
                             <li class="{{ Request::is('user') ? 'active' : '' }}">

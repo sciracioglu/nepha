@@ -15,6 +15,8 @@ class Medicine extends Model
         'gtin',
         'medicine',
         'user_id',
+        'group',
+        'country',
         'created_at',
         'updated_at'
     ];

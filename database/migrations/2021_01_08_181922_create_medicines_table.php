@@ -16,10 +16,11 @@ class CreateMedicinesTable extends Migration
         Schema::create('medicines', function (Blueprint $table) {
             $table->string('gtin')->primary();
             $table->string('medicine');
+            $table->string('group');
+            $table->string('country');
             $table->unsignedBigInteger('user_id');
             $table->softDeletes();
             $table->timestamps();
-
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users');
