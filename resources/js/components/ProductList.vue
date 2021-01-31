@@ -138,7 +138,6 @@
                                             <select class="form-control" v-model='form.production_identifier' @change="setCountry($event)">
                                                 <option v-for='facility in facilities' :value='facility.facility'>{{ facility.facility }}</option>
                                             </select>
-                                            <input type="text" v-model="form.production_identifier" class="form-control" />
                                         </div>
                                     </div>
                                     <div class="col-md-3">
