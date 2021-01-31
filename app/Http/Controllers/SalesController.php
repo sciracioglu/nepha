@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class SalesController extends Controller
 {
-    private $codes;
+    protected $codes;
 
     public function __construct()
     {
@@ -46,6 +46,7 @@ class SalesController extends Controller
             'load_date' => 'required',
             'dt' => 'required',
             'country_code' => 'required',
+            'delivery' => 'required',
             'xd' => 'required',
         ]);
         $data['city'] = $data['cityPlate']['city'];
@@ -53,10 +54,10 @@ class SalesController extends Controller
         $data['corp'] = $data['togln']['companyName'];
         $data['togln'] = $data['togln']['gln'];
         $data['country_code'] = $data['country_code']['code2'];
-        $data['gtin'] = $data['gtin']['gtin'];
         unset($data['cityPlate']);
         $data['load_date'] = Carbon::parse(request('load_date'))->format('Y-m-d');
-        $data['xd'] = Carbon::parse(request('xd'))->format('Y-m-d');
+        $data['xd'] = Carbon::parse(request('xd'))->format('Y-m-d H:i');
+        $data['delivery'] = Carbon::parse(request('delivery'))->format('Y-m-d H:i');
         [$data['response_json'],$data['bildirim_id'], $data['uc']] = $this->addITS($data);
         Products::create($data);
         $response['status'] = 0;

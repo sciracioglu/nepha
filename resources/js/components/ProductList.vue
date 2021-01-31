@@ -38,6 +38,7 @@
                                         <th>DT</th>
                                         <th>Ülke Kodu</th>
                                         <th>Son Kullanım Tarihi</th>
+                                        <th>Teslim Tarihi</th>
                                         <th>Onay</th>
                                     </tr>
                                 </thead>
@@ -58,6 +59,7 @@
                                         <td>{{ product.dt }}</td>
                                         <td>{{ product.country_code }}</td>
                                         <td>{{ product.xd }}</td>
+                                        <td>{{ product.delivery }}</td>
                                         <td>{{ product.uc }}</td>
                                     </tr>
                                 </tbody>
@@ -110,10 +112,16 @@
                                     </div>
                                 </div>
                                 <div class="row" style="margin-bottom:20px;">
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label class='form-label'>Ürün</label>
-                                            <v-select v-model='form.gtin' :options='medicines' label='medicine' />
+                                            <select v-model='form.gtin' class="form-control">
+                                                <optgroup v-for='group in groups' :label="group.name">
+                                                    <option v-for="option in medicines" :value="option.barcode" v-if='group.group === option.group'>
+                                                        {{ option.medicine }}
+                                                    </option>
+                                                </optgroup>
+                                            </select>
                                             <span class="text-danger" v-if="form.errors.has('gtin')">GTIN Zorunlu alan</span>
                                         </div>
                                     </div>
@@ -127,8 +135,17 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class='form-label'>Üretim Tesisi</label>
+                                            <select class="form-control" v-model='form.production_identifier' @change="setCountry($event)">
+                                                <option v-for='facility in facilities' :value='facility.facility'>{{ facility.facility }}</option>
+                                            </select>
                                             <input type="text" v-model="form.production_identifier" class="form-control" />
-
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class='form-label'>Teslim Tarihi</label>
+                                            <datetime v-model="form.delivery" type="datetime" :minute-step="30" input-class="form-control" format="dd/MM/yyyy HH:mm" :auto='true' :phrases="{ok: 'Tamam', cancel: 'iptal'}" zone="Europe/Istanbul"></datetime>
+                                            <span class="text-danger" v-if="form.errors.has('delivery')">Teslim Tarihi Zorunlu alan</span>
                                         </div>
                                     </div>
                                 </div>
@@ -149,7 +166,7 @@
                                                 <option value="2">mci</option>
                                                 <option value="3">mbq</option>
                                                 <option value="4">gbq</option>
-                                                <option value="5">kutu</option>
+                                                <option value="5">kutu/vial</option>
                                             </select>
                                             <span class="text-danger" v-if="form.errors.has('loaded_unit_id')">Yüklenen Aktivite Birimi Zorunlu alan</span>
                                         </div>
@@ -170,7 +187,7 @@
                                                 <option value="2">mci</option>
                                                 <option value="3">mbq</option>
                                                 <option value="4">gbq</option>
-                                                <option value="5">kutu</option>
+                                                <option value="5">kutu/vial</option>
                                             </select>
                                             <span class="text-danger" v-if="form.errors.has('calibration_unit_id')">Hedeflenen Aktivite Birimi Zorunlu alan</span>
                                         </div>
@@ -206,8 +223,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class='form-label'>Son Kullanma Tarihi</label>
-
-                                            <datetime v-model="form.xd" type="datetime" :minute-step="5" input-class="form-control" format="dd/MM/yyyy HH:mm" :auto='true' :phrases="{ok: 'Tamam', cancel: 'iptal'}" zone="Europe/Istanbul"></datetime>
+                                            <datetime v-model="form.xd" type="datetime" :minute-step="30" input-class="form-control" format="dd/MM/yyyy HH:mm" :auto='true' :phrases="{ok: 'Tamam', cancel: 'iptal'}" zone="Europe/Istanbul"></datetime>
                                             <span class="text-danger" v-if="form.errors.has('xd')">Son Kullanma Tarihi Zorunlu alan</span>
                                         </div>
                                     </div>
@@ -322,6 +338,7 @@ import 'vue-datetime/dist/vue-datetime.css'
             this.getCountry();
             this.getCorp();
             this.getMedicines();
+            this.getFacilities();
         },
         data(){
           return {
@@ -336,6 +353,8 @@ import 'vue-datetime/dist/vue-datetime.css'
             corps:[],
             countries:[],
             medicines:[],
+            groups:[],
+            facilities:[],
             form:new Form({
                 stakeholderType:'hastane',
                 getAll:false,
@@ -347,6 +366,7 @@ import 'vue-datetime/dist/vue-datetime.css'
                 togln:null,
                 gtin:null,
                 bn:null,
+                delivery:null,
                 production_identifier:null,
                 loaded_activity:null,
                 loaded_unit_id:null,
@@ -372,6 +392,7 @@ import 'vue-datetime/dist/vue-datetime.css'
                 var bn = product.bn != null ? product.bn.replace(/(([İIŞĞÜÇÖ]))/g, function(letter){ return letters[letter]; }) : ''
                 var production_identifier = product.production_identifier != null ? product.production_identifier.replace(/(([İIŞĞÜÇÖ]))/g, function(letter){ return letters[letter]; }) : ''
                 var load_date = product.load_date != null ? product.load_date.replace(/(([İIŞĞÜÇÖ]))/g, function(letter){ return letters[letter]; }) : ''
+                var delivery = product.delivery != null ? product.delivery.replace(/(([İIŞĞÜÇÖ]))/g, function(letter){ return letters[letter]; }) : ''
                 var xd = product.xd != null ? product.xd.replace(/(([İIŞĞÜÇÖ]))/g, function(letter){ return letters[letter]; }) : ''
                 var search = this.search.replace(/(([İIŞĞÜÇÖ]))/g, function(letter){ return letters[letter]; })
 
@@ -379,11 +400,15 @@ import 'vue-datetime/dist/vue-datetime.css'
                         (bn.toLowerCase().indexOf(search.toLowerCase()) > -1 && bn != null) ||
                         (production_identifier.toLowerCase().indexOf(search.toLowerCase()) > -1 && production_identifier != null) ||
                         (load_date.toLowerCase().indexOf(search.toLowerCase()) > -1 && load_date != null) ||
+                        (delivery.toLowerCase().indexOf(search.toLowerCase()) > -1 && delivery != null) ||
                         (xd.toLowerCase().indexOf(search.toLowerCase()) > -1 && xd != null)
             })
         },
       },
       methods:{
+          setCountry(event){
+              this.form.country_code = this.facilities[event.target.selectedIndex].country;
+          },
           getCorp(){
             var self = this;
             if(this.form.cityPlate !== '' && this.form.stakeholderType !== ''){
@@ -413,8 +438,16 @@ import 'vue-datetime/dist/vue-datetime.css'
               var self = this;
               axios.get('/medicine-list')
                   .then(({data})=>{
-                      self.medicines = data;
+                      self.medicines = data.medicines;
+                      self.groups = data.groups;
                   });
+          },
+          getFacilities(){
+              var self = this;
+              axios.get('/facility-list')
+                .then(({data})=>{
+                    self.facilities = data.facilities;
+                });
           },
           getProducts(){
               var self = this;

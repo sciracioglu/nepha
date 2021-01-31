@@ -3,19 +3,17 @@
       <div class="list-group">
         <div class="list-group-item list-group-item-primary">
           <div class="row">
-            <div class="col-md-3">Barkod</div>
-            <div class="col-md-5">Ürün Adı</div>
-            <div class="col-md-3">Grup</div>
+            <div class="col-md-8">Tesis Adı</div>
+            <div class="col-md-3">Menşei</div>
             <div class="col-md-1"></div>
           </div>
         </div>
-        <div class="list-group-item" v-for="(medicine,index) in medicines" :key="index">
+        <div class="list-group-item" v-for="(facility,index) in facilities" :key="index">
           <div class="row">
-            <div class="col-md-3">{{ medicine.barcode }}</div>
-            <div class="col-md-5">{{ medicine.medicine }}</div>
-            <div class="col-md-3">{{ groups[medicine.group] }}</div>
+            <div class="col-md-8">{{ facility.facility }}</div>
+            <div class="col-md-3">{{ facility.country.country }}</div>
             <div class="col-md-1 text-right">
-                <a href="javascript:void(0);" @click="deleteMedicine(medicine.barcode)" class="btn btn-sm btn-danger btn-icon waves-effect waves-themed">
+                <a href="javascript:void(0);" @click="deleteFacility(facility.id)" class="btn btn-sm btn-danger btn-icon waves-effect waves-themed">
                   <i class="fal fa-trash"></i>
                 </a>
             </div>
@@ -23,26 +21,16 @@
         </div>
         <div class="list-group-item">
           <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-8">
               <div class="form-group">
-                <label>Barkod</label>
-                <input type="text" class="form-control" v-model='form.gtin' />
-              </div>
-            </div>
-            <div class="col-md-5">
-              <div class="form-group">
-                <label>Ürün</label>
-                <input type="text" class="form-control" v-model='form.medicine' />
+                <label>Tesis Adı</label>
+                <input type="text" class="form-control" v-model='form.facility' />
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label>Grubu</label>
-                <select type="text" class="form-control" v-model='form.group'>
-                  <option value="" selected>Seçin</option>
-                  <option value="soguk_kit">Soğuk Kit</option>
-                  <option value="radyofarmasotik">Radyofarmasötikler</option>
-                </select>
+                <label>Ülke</label>
+                <v-select label="country" v-model="form.country" :options="countries"></v-select>
               </div>
             </div>
             <div class="col-md-1 text-right">
@@ -67,41 +55,53 @@ import 'vue-select/dist/vue-select.css';
 export default{
     data(){
         return {
-          medicines:[],
-          groups:{
-                'soguk_kit':'Soguk Kit',
-                'radyofarmasotik':'Radyofarmasötikler',
-            },
+          facilities:[],
+          countries:[],
           form:new Form({
-            gtin:null,
-            medicine:null,
-            group:null,
+            facility:null,
+            country:{
+              code2:'NL',
+              code3:'NLD',
+              country:'Netherlands (the)',
+              id:528,
+            }
           }),
         }
     },
     mounted(){
-      this.getMedicines();
+      this.getFacilities();
+      this.getCountry();
     },
     methods:{
-      getMedicines(){
+      getFacilities(){
         var self = this;
-        axios.get('/medicine-list')
+        axios.get('/facility-list')
           .then(({data})=>{
-            self.medicines = data.medicines;
+            self.facilities = data.facilities;
+            self.countries = data.countries;
           })
+      },
+      getCountry(){
+          var self = this;
+          axios.get('/countries')
+            .then(({data})=>{
+                self.countries = data;
+            });
       },
       save(){
         var self = this;
-        this.form.post('/medicine')
+        let country = this.form.country;
+        this.form.post('/facility')
           .then(function(){
-            self.getMedicines();
+            self.getFacilities();
+            self.form.country = country;
           })
       },
-      deleteMedicine(gtin){
+      deleteFacility(gtin){
         var self = this;
         Swal.fire({
           title: 'Emin misniz?',
-          text: "Ürün Silinecek!",
+          text: "Tesis Silinecek!",
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
@@ -110,9 +110,9 @@ export default{
           cancelButtonText: 'Hayır'
           }).then((result) => {
               if (result.isConfirmed) {
-                  axios.delete('/medicine/' + gtin)
+                  axios.delete('/facility/' + gtin)
                       .then(function(){
-                          self.getMedicines();
+                          self.getFacilities();
                       });
               }
           });

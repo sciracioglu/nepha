@@ -18,6 +18,7 @@ Vue.component('datetime', Datetime);
 
 Vue.component('product-list', require('./components/ProductList.vue').default);
 Vue.component('medicine', require('./components/Medicine.vue').default);
+Vue.component('facility', require('./components/Facility.vue').default);
 Vue.component('user', require('./components/User.vue').default);
 
 const app = new Vue({

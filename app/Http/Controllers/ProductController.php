@@ -5,22 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\PlateCode;
 use App\Models\Products;
 
-class ProductController extends Controller
+class ProductController extends SalesController
 {
-    private $codes;
+    private $units;
 
     public function __construct()
     {
         $this->middleware('auth');
-        $this->codes = [
-            '00000' => 'Ürün üzerinde gerçekleştirilen işlem başarılıdır.',
-            '11005' => 'Bu ürüne ait bildirim yapma yetkiniz yok',
-            '10204' => 'Belirtilen ürün daha önce satılmış',
-            '10202' => 'Ürünün Son Kullanma Tarihi geçmiştir',
-            '11004' => 'Yanlış GTIN numarası',
-            '10206' => 'Veri tabanı kayıt hatası',
-            '10201' => 'Belirtilen ürün sistemde kayıtlı değil',
-            '15029' => 'Geçersiz (Kalibrasyon/Yüklenen Aktivite) birim değeri',
+        $this->units = [
+            1 => '&#181;ci',
+            2 => 'mci',
+            3 => 'mbq',
+            4 => 'gbq',
+            5 => 'kutu/vial',
         ];
     }
 
@@ -37,10 +34,11 @@ class ProductController extends Controller
                     'bn' => $product->bn,
                     'product_identifier' => $product->identifier,
                     'loaded_activity' => $product->loaded_activity,
-                    'loaded_unit_id' => $product->loaded_unit_id,
+                    'loaded_unit_id' => $this->units[$product->loaded_unit_id],
                     'calibration_activity' => $product->calibration_activity,
-                    'calibration_unit_id' => $product->calibration_unit_id,
+                    'calibration_unit_id' => $this->units[$product->calibration_unit_id],
                     'load_date' => $product->load_date,
+                    'delivery' => $product->delivery,
                     'dt' => $product->dt,
                     'uc' => $this->codes[$product->uc],
                     'bildirim_id' => $product->bildirim_id,

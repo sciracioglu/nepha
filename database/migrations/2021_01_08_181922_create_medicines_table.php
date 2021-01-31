@@ -17,7 +17,6 @@ class CreateMedicinesTable extends Migration
             $table->string('gtin')->primary();
             $table->string('medicine');
             $table->string('group');
-            $table->string('country');
             $table->unsignedBigInteger('user_id');
             $table->softDeletes();
             $table->timestamps();

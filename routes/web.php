@@ -10,8 +10,8 @@ Route::post('sale', [App\Http\Controllers\SalesController::class, 'store'])->nam
 Route::delete('sale/{id}', [App\Http\Controllers\SalesController::class, 'destroy'])->name('cancel');
 Route::post('corp', [App\Http\Controllers\CorporationController::class, 'index'])->name('declare');
 
-Route::get('cities', [App\Http\Controllers\CityController::class, 'index'])->name('declare');
-Route::get('countries', [App\Http\Controllers\CountryController::class, 'index'])->name('declare');
+Route::get('cities', [App\Http\Controllers\CityController::class, 'index'])->name('cties');
+Route::get('countries', [App\Http\Controllers\CountryController::class, 'index'])->name('countries');
 
 Route::get('products', [App\Http\Controllers\ProductController::class, 'index'])->name('list');
 
@@ -19,6 +19,11 @@ Route::get('medicine', [App\Http\Controllers\MedicineController::class, 'index']
 Route::post('medicine', [App\Http\Controllers\MedicineController::class, 'store'])->name('store-medicine');
 Route::delete('medicine/{gtin}', [App\Http\Controllers\MedicineController::class, 'destroy'])->name('delete-medicine');
 Route::get('medicine-list', [App\Http\Controllers\MedicineController::class, 'list'])->name('medicine-list');
+
+Route::get('facility', [App\Http\Controllers\FacilityController::class, 'index'])->name('facility');
+Route::post('facility', [App\Http\Controllers\FacilityController::class, 'store'])->name('store-facility');
+Route::delete('facility/{id}', [App\Http\Controllers\FacilityController::class, 'destroy'])->name('delete-facility');
+Route::get('facility-list', [App\Http\Controllers\FacilityController::class, 'list'])->name('facility-list');
 
 Route::get('user', [App\Http\Controllers\UsersController::class, 'index'])->name('user');
 Route::get('user-list', [App\Http\Controllers\UsersController::class, 'list'])->name('users-list');

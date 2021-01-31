@@ -71,10 +71,10 @@
                                     <span class="nav-link-text" data-i18n="nav.blankpage">Tanımlar</span>
                                 </a>
                             </li>
-                            <li class="{{ Request::is('group-dephinition') ? 'active' : '' }}">
-                                <a href="/group-dephinition" title="Satış">
-                                    <i class="fal fa-flask"></i>
-                                    <span class="nav-link-text" data-i18n="nav.blankpage">Grup Tanımları</span>
+                            <li class="{{ Request::is('facility') ? 'active' : '' }}">
+                                <a href="/facility" title="Satış">
+                                    <i class="fal fa-garage"></i>
+                                    <span class="nav-link-text" data-i18n="nav.blankpage">Tesis Tanımları</span>
                                 </a>
                             </li>
                             <li class="{{ Request::is('user') ? 'active' : '' }}">
@@ -84,7 +84,7 @@
                                 </a>
                             </li>
                             @endif
-                            <li class="{{ Request::is('user') ? 'active' : '' }}">
+                            <li class="{{ Request::is('reports') ? 'active' : '' }}">
                                 <a href="/reports" title="Raporlar">
                                     <i class="fal fa-file-chart-line"></i>
                                     <span class="nav-link-text" data-i18n="nav.blankpage">Raporlar</span>

@@ -16,7 +16,6 @@ class Medicine extends Model
         'medicine',
         'user_id',
         'group',
-        'country',
         'created_at',
         'updated_at'
     ];

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Country;
 use App\Models\Medicine;
 
 class MedicineController extends Controller
@@ -25,15 +24,23 @@ class MedicineController extends Controller
 
     public function list()
     {
-        $data['country'] = Country::orderBy('country')->get();
-        $data['medicine'] = Medicine::orderBy('medicine')
+        $data['groups'] = Medicine::groupBy('group')
+            ->get(['group'])
+            ->map(function ($group) {
+                return [
+                    'group' => $group->group,
+                    'name' => $this->group[$group->group],
+                ];
+            });
+
+        $data['medicines'] = Medicine::orderBy('group')
+            ->orderBy('medicine')
             ->get()
             ->map(function ($medicine) {
                 return [
+                    'group' => $medicine->group,
                     'barcode' => $medicine->gtin,
                     'medicine' => $medicine->medicine,
-                    'group' => $this->group[$medicine->group],
-                    'country' => json_decode($medicine->country, true),
                 ];
             });
 
@@ -46,9 +53,7 @@ class MedicineController extends Controller
             'gtin' => 'required',
             'medicine' => 'required',
             'group' => 'required',
-            'country' => 'required',
         ]);
-        $data['country'] = json_encode(request('country'), JSON_UNESCAPED_UNICODE);
 
         Medicine::create($data);
     }
