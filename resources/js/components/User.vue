@@ -1,6 +1,14 @@
 <template>
     <div>
       <div class="list-group">
+        <div class="list-group-item list-group-item-primary">
+          <div class="row">
+            <div class="col-md-4">Kullanıcı Adı</div>
+            <div class="col-md-4">Mail Adresi</div>
+            <div class="col-md-3">Yetkisi</div>
+            <div class="col-md-1"></div>
+          </div>
+        </div>
         <div class="list-group-item" v-for="(user,index) in users" :key="index">
           <div class="row">
             <div class="col-md-4">{{ user.name }}</div>

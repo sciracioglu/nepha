@@ -6,8 +6,6 @@
             NEPHA
         </title>
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <script src="{{ asset('js/app.js') }}" defer></script>
-        <link rel="dns-prefetch" href="//fonts.gstatic.com">
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
         <meta name="description" content="Page Title">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -191,6 +189,7 @@
             </div>
         </div>
         <script src="js/vendors.bundle.js"></script>
+        <script src="{{ asset('js/app.js') }}"></script>
         @yield('script')
     </body>
 </html>
