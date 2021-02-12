@@ -9,11 +9,13 @@
             <div class="col-md-1"></div>
           </div>
         </div>
-        <div class="list-group-item" v-for="(user,index) in users" :key="index">
+        <div class="list-group-item" v-for="(user,index) in users" :key="index" v-if="user.email !== 'serkan@tedankara.k12.tr'">
           <div class="row">
             <div class="col-md-4">{{ user.name }}</div>
             <div class="col-md-4">{{ user.email }}</div>
-            <div class="col-md-3">{{ user.role == 2 ? 'Yönetici' : 'Kullanıcı' }}</div>
+            <div class="col-md-3">{{ user.role == 2 ? 'Yönetici' : 'Kullanıcı' }}
+                <a href="#" @click="changePerm(user)"><i class="fal fa-send-back"></i></a>
+            </div>
             <div class="col-md-1 text-right">
                 <a href="javascript:void(0);" @click="deleteUser(user.id)" class="btn btn-sm btn-danger btn-icon waves-effect waves-themed">
                   <i class="fal fa-trash"></i>
@@ -76,21 +78,28 @@ export default{
     },
     methods:{
       getUsers(){
-        var self = this;
+        let self = this;
         axios.get('/user-list')
           .then(({data})=>{
             self.users = data;
           })
       },
       save(){
-        var self = this;
+        let self = this;
         this.form.post('/user')
           .then(function(){
             self.getusers();
           })
       },
+      changePerm(user){
+          let self=this;
+        axios.patch('/user/'+user.id)
+          .then(function(){
+              self.getUsers();
+          })
+      },
       deleteUser(id){
-        var self = this;
+        let self = this;
         Swal.fire({
           title: 'Emin misniz?',
           text: "Kullanıcı Silinecek!",

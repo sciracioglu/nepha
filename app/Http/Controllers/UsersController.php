@@ -21,6 +21,15 @@ class UsersController extends Controller
         return User::orderBy('name')->get();
     }
 
+    public function update(User $user)
+    {
+
+        $change = User::find($user->id);
+        (int) $user->role === 2
+            ? $change->update(['role' => 1])
+            : $change->update(['role' => 2]);
+    }
+
     public function store()
     {
         $data = request()->validate([

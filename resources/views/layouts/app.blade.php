@@ -46,7 +46,7 @@
 
                                 </a>
                             </div>
-                            <img src="{{ asset('img/card-backgrounds/cover-2-lg.png') }}" class="cover" alt="cover">
+                            <img src="{{ asset('img/card-backgrounds/nepha_cover.png') }}" class="cover" alt="cover">
 
                         </div>
                         <ul id="js-nav-menu" class="nav-menu">
@@ -189,7 +189,7 @@
             </div>
         </div>
         <script src="js/vendors.bundle.js"></script>
-        <script src="{{ asset('js/app.js') }}"></script>
+        <script src="{{ asset('js/app.js') }}?d={{ date('dMYHis') }}"></script>
         @yield('script')
     </body>
 </html>

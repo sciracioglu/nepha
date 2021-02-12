@@ -27,13 +27,11 @@
                             <table class="table table-bordered table-hover">
                                 <thead class="thead-themed">
                                     <tr>
-                                        <th>GTIN</th>
+                                        <th>Ürün</th>
                                         <th>Parti No</th>
                                         <th>Üretim Tesisi</th>
                                         <th>Yüklenen Aktivite</th>
-                                        <th>Birimi</th>
                                         <th>Hedeflenen Aktivite</th>
-                                        <th>Hedef Birimi</th>
                                         <th>Yükleme Tarihi</th>
                                         <th>DT</th>
                                         <th>Ülke Kodu</th>
@@ -51,16 +49,15 @@
                                         </td>
                                         <td>{{ product.bn }}</td>
                                         <td>{{ product.production_identifier }}</td>
-                                        <td>{{ product.loaded_activity }}</td>
-                                        <td>{{ product.loaded_unit_id }}</td>
-                                        <td>{{ product.calibration_activity }}</td>
-                                        <td>{{ product.calibration_unit_id }}</td>
+                                        <td v-html="product.loaded_activity+' '+product.loaded_unit_id">{{ product.loaded_activity }}</td>
+                                        <td v-html="product.calibration_activity+' '+product.calibration_unit_id"></td>
                                         <td>{{ product.load_date }}</td>
                                         <td>{{ product.dt }}</td>
                                         <td>{{ product.country_code }}</td>
                                         <td>{{ product.xd }}</td>
                                         <td>{{ product.delivery }}</td>
-                                        <td>{{ product.uc }}</td>
+                                        <td> <span v-if="product.cancel_date">{{ product.cancel_date }} tarihinde iptal edildi</span>
+                                            <span v-else>{{ product.uc }}</span></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -98,7 +95,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class='form-label'>İl</label>
-                                            <v-select label="city" v-model="form.cityPlate" :options="cities"></v-select>
+                                            <v-select label="city" v-model="form.cityPlate" :options="cities" @input="getCorp()"></v-select>
                                             <span class="text-danger" v-if="form.errors.has('cityPlate')">İl zorunlu alan</span>
                                         </div>
                                     </div>
@@ -143,7 +140,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class='form-label'>Teslim Tarihi</label>
-                                            <datetime v-model="form.delivery" type="datetime" :minute-step="30" input-class="form-control" format="dd/MM/yyyy HH:mm" :auto='true' :phrases="{ok: 'Tamam', cancel: 'iptal'}" zone="Europe/Istanbul"></datetime>
+                                            <datetime v-model="form.delivery" type="date" input-class="form-control" format="dd/MM/yyyy" :auto='true' :phrases="{ok: 'Tamam', cancel: 'iptal'}" value-zone="Europe/Istanbul"></datetime>
                                             <span class="text-danger" v-if="form.errors.has('delivery')">Teslim Tarihi Zorunlu alan</span>
                                         </div>
                                     </div>
@@ -196,7 +193,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class='form-label'>Yükleme Tarihi</label>
-                                            <datetime v-model="form.load_date" type="date" input-class="form-control" format="dd/MM/yyyy" :auto='true' :phrases="{ok: 'Tamam', cancel: 'iptal'}" zone="Europe/Istanbul"></datetime>
+                                            <datetime v-model="form.load_date" type="date" input-class="form-control" format="dd/MM/yyyy" :auto='true' :phrases="{ok: 'Tamam', cancel: 'iptal'}" value-zone="Europe/Istanbul"></datetime>
                                             <span class="text-danger" v-if="form.errors.has('load_date')">Yükleme Tarihi Zorunlu alan</span>
                                         </div>
                                     </div>
@@ -222,7 +219,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class='form-label'>Son Kullanma Tarihi</label>
-                                            <datetime v-model="form.xd" type="datetime" :minute-step="30" input-class="form-control" format="dd/MM/yyyy HH:mm" :auto='true' :phrases="{ok: 'Tamam', cancel: 'iptal'}" zone="Europe/Istanbul"></datetime>
+                                            <datetime v-model="form.xd" type="datetime" :minute-step="30" input-class="form-control" format="dd/MM/yyyy HH:mm" :auto='true' :phrases="{ok: 'Tamam', cancel: 'iptal'}" value-zone="Europe/Istanbul"></datetime>
                                             <span class="text-danger" v-if="form.errors.has('xd')">Son Kullanma Tarihi Zorunlu alan</span>
                                         </div>
                                     </div>
@@ -268,19 +265,11 @@
                                     </tr>
                                     <tr>
                                         <th>Yüklenen Aktivite</th>
-                                        <td>: {{ selected_product.loaded_activity }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Birimi</th>
-                                        <td>: {{ selected_product.loaded_unit_id }}</td>
+                                        <td v-html="':'+selected_product.loaded_activity+' '+selected_product.loaded_unit_id"></td>
                                     </tr>
                                     <tr>
                                         <th>Hedeflenen Aktivite</th>
-                                        <td>: {{ selected_product.calibration_activity }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Hedef Birimi</th>
-                                        <td>: {{ selected_product.calibration_unit_id }}</td>
+                                        <td v-html="':'+selected_product.calibration_activity+' '+selected_product.calibration_unit_id"></td>
                                     </tr>
                                     <tr>
                                         <th>Yükleme Tarihi</th>
@@ -299,8 +288,15 @@
                                         <td>: {{ selected_product.xd }}</td>
                                     </tr>
                                     <tr>
+                                        <td>Teslim Tarihi</td>
+                                        <td>: {{ selected_product.delivery }}</td>
+                                    </tr>
+                                    <tr>
                                         <th>Onay</th>
-                                        <td>: {{ selected_product.uc }}</td>
+                                        <td>:
+                                            <span v-if="selected_product.cancel_date">{{ selected_product.cancel_date }} tarihinde iptal edildi</span>
+                                            <span v-else>{{ selected_product.uc }}</span>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>

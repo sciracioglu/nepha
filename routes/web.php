@@ -29,5 +29,6 @@ Route::get('user', [App\Http\Controllers\UsersController::class, 'index'])->name
 Route::get('user-list', [App\Http\Controllers\UsersController::class, 'list'])->name('users-list');
 Route::post('user', [App\Http\Controllers\UsersController::class, 'store'])->name('store-user');
 Route::delete('user/{id}', [App\Http\Controllers\UsersController::class, 'destroy'])->name('delete-user');
+Route::patch('user/{user}', [App\Http\Controllers\UsersController::class, 'update'])->name('update-user');
 
 Route::get('reports/', [App\Http\Controllers\ReportsController::class, 'index'])->name('reports');

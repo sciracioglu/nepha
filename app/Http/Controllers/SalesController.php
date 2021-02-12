@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class SalesController extends Controller
 {
-    protected $codes;
+    public array $codes;
 
     public function __construct()
     {
@@ -48,15 +48,18 @@ class SalesController extends Controller
             'country_code' => 'required',
             'delivery' => 'required',
             'xd' => 'required',
+            'production_identifier' => 'required',
         ]);
         $data['city'] = $data['cityPlate']['city'];
         $data['plate'] = $data['cityPlate']['code'];
         $data['corp'] = $data['togln']['companyName'];
         $data['togln'] = $data['togln']['gln'];
         $data['country_code'] = $data['country_code']['code2'];
+        $data['loaded_activity'] = str_replace(',','.',request('loaded_activity'));
+        $data['calibration_activity'] = str_replace(',','.',request('calibration_activity'));
         unset($data['cityPlate']);
         $data['load_date'] = Carbon::parse(request('load_date'))->format('Y-m-d');
-        $data['xd'] = Carbon::parse(request('xd'))->format('Y-m-d H:i');
+        $data['xd'] = Carbon::parse(request('xd'))->format('Y-m-d');
         $data['delivery'] = Carbon::parse(request('delivery'))->format('Y-m-d H:i');
         [$data['response_json'],$data['bildirim_id'], $data['uc']] = $this->addITS($data);
         Products::create($data);
@@ -136,7 +139,6 @@ class SalesController extends Controller
         $clean_xml = str_ireplace(['SOAP-ENV:', 'SOAP:', 's:'], '', $response);
         libxml_use_internal_errors(true);
         $xml = json_decode(json_encode(simplexml_load_string($clean_xml)), true);
-        //dd($xml);
         $bildirim_id = $xml['Body']['ns2:RadyofarmaResponse']['BILDIRIMID'];
         $uc = $xml['Body']['ns2:RadyofarmaResponse']['URUNLER']['BNDURUM']['UC'];
         $response_json = json_encode($xml['Body'], JSON_UNESCAPED_UNICODE);
