@@ -87,6 +87,8 @@
                                                 <option value="hastane">Hastane</option>
                                                 <option value="uretici">Üretici</option>
                                                 <option value="ihracatci">İhracatçı</option>
+                                                <option value="depo">Depo</option>
+                                                <option value="eczane">Eczane</option>
                                                 <option value="geriodemekurumu">Geri Ödeme Kurumu</option>
                                             </select>
                                             <span class="text-danger" v-if="form.errors.has('stakeholderType')">Kurum Tipi zorunlu alan</span>
