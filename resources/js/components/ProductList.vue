@@ -63,7 +63,8 @@
                                     <td>{{ product.country_code }}</td>
                                     <td>{{ product.xd }}</td>
                                     <td>{{ product.delivery }}</td>
-                                    <td><span v-if="product.cancel_date">{{ product.cancel_date }} tarihinde iptal edildi</span>
+                                    <td>
+                                        <span v-if="product.cancel_date">{{ product.cancel_date }} tarihinde iptal edildi</span>
                                         <span v-else>{{ product.uc }}</span></td>
                                 </tr>
                                 </tbody>
@@ -115,7 +116,7 @@
                                         <div class="form-group">
                                             <label class='form-label'>Kurum</label>
                                             <span v-if="loading"><i class="fal fa-cog fa-2x fa-spin"></i></span>
-                                            <v-select v-else label="companyName" v-model="form.togln"
+                                            <v-select v-else label="label" v-model="form.togln"
                                                       :options="corps"></v-select>
                                             <span class="text-danger"
                                                   v-if="form.errors.has('togln')">TOGLN Zorunlu alan</span>
@@ -171,15 +172,8 @@
                                 <div class="row" style="margin-bottom:20px;">
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label class='form-label'>Yüklenen Aktivite</label>
-                                            <input type="text" v-model="form.loaded_activity" class="form-control"/>
-                                            <span class="text-danger" v-if="form.errors.has('loaded_activity')">Yüklenen Aktivite Zorunlu alan</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
                                             <label class='form-label'>Yüklenen Aktivite Birimi</label>
-                                            <select v-model="form.loaded_unit_id" class="form-control">
+                                            <select v-model="form.loaded_unit_id" class="form-control" @change="birim()">
                                                 <option>Seçin</option>
                                                 <option value="1">&#181;ci</option>
                                                 <option value="2">mci</option>
@@ -190,6 +184,14 @@
                                             <span class="text-danger" v-if="form.errors.has('loaded_unit_id')">Yüklenen Aktivite Birimi Zorunlu alan</span>
                                         </div>
                                     </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class='form-label'>Yüklenen Aktivite</label>
+                                            <input type="text" v-model="form.loaded_activity" class="form-control"/>
+                                            <span class="text-danger" v-if="form.errors.has('loaded_activity')">Yüklenen Aktivite Zorunlu alan</span>
+                                        </div>
+                                    </div>
+
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class='form-label'>Hedeflenen Aktivite</label>
@@ -357,13 +359,13 @@
 </template>
 <script>
 import vSelect from 'vue-select'
-
-Vue.component('v-select', vSelect)
 import 'vue-select/dist/vue-select.css';
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import 'sweetalert2/src/sweetalert2.scss'
 import {Datetime} from 'vue-datetime'
 import 'vue-datetime/dist/vue-datetime.css'
+
+Vue.component('v-select', vSelect)
 
 export default {
     components: {
@@ -424,39 +426,46 @@ export default {
     computed: {
         filtre: function () {
             return this.products.filter(product => {
-                var letters = {"İ": "i", "I": "ı", "Ş": "ş", "Ğ": "ğ", "Ü": "ü", "Ö": "ö", "Ç": "ç"};
-                var gtin = product.gtin != null ? product.gtin.replace(/(([İIŞĞÜÇÖ]))/g, function (letter) {
+                let letters = {"İ": "i", "I": "ı", "Ş": "ş", "Ğ": "ğ", "Ü": "ü", "Ö": "ö", "Ç": "ç"};
+                let corp = product.corp != null ? product.corp.replace(/(([İIŞĞÜÇÖ]))/g, function (letter) {
                     return letters[letter];
                 }) : ''
-                var bn = product.bn != null ? product.bn.replace(/(([İIŞĞÜÇÖ]))/g, function (letter) {
+                let gtin = product.gtin != null ? product.gtin.replace(/(([İIŞĞÜÇÖ]))/g, function (letter) {
                     return letters[letter];
                 }) : ''
-                var production_identifier = product.production_identifier != null ? product.production_identifier.replace(/(([İIŞĞÜÇÖ]))/g, function (letter) {
+                let bn = product.bn != null ? product.bn.replace(/(([İIŞĞÜÇÖ]))/g, function (letter) {
                     return letters[letter];
                 }) : ''
-                var load_date = product.load_date != null ? product.load_date.replace(/(([İIŞĞÜÇÖ]))/g, function (letter) {
+                let production_identifier = product.production_identifier != null ? product.production_identifier.replace(/(([İIŞĞÜÇÖ]))/g, function (letter) {
                     return letters[letter];
                 }) : ''
-                var delivery = product.delivery != null ? product.delivery.replace(/(([İIŞĞÜÇÖ]))/g, function (letter) {
+                let load_date = product.load_date != null ? product.load_date.replace(/(([İIŞĞÜÇÖ]))/g, function (letter) {
                     return letters[letter];
                 }) : ''
-                var xd = product.xd != null ? product.xd.replace(/(([İIŞĞÜÇÖ]))/g, function (letter) {
+                let delivery = product.delivery != null ? product.delivery.replace(/(([İIŞĞÜÇÖ]))/g, function (letter) {
                     return letters[letter];
                 }) : ''
-                var search = this.search.replace(/(([İIŞĞÜÇÖ]))/g, function (letter) {
+                let xd = product.xd != null ? product.xd.replace(/(([İIŞĞÜÇÖ]))/g, function (letter) {
+                    return letters[letter];
+                }) : ''
+                let search = this.search.replace(/(([İIŞĞÜÇÖ]))/g, function (letter) {
                     return letters[letter];
                 })
 
-                return gtin.toLowerCase().indexOf(search.toLowerCase()) > -1 ||
-                    (bn.toLowerCase().indexOf(search.toLowerCase()) > -1 && bn != null) ||
-                    (production_identifier.toLowerCase().indexOf(search.toLowerCase()) > -1 && production_identifier != null) ||
-                    (load_date.toLowerCase().indexOf(search.toLowerCase()) > -1 && load_date != null) ||
-                    (delivery.toLowerCase().indexOf(search.toLowerCase()) > -1 && delivery != null) ||
-                    (xd.toLowerCase().indexOf(search.toLowerCase()) > -1 && xd != null)
+                return gtin.toLowerCase().indexOf(search.toLowerCase()) > -1
+                    || (corp.toLowerCase().indexOf(search.toLowerCase()) > -1 && true)
+                    || (bn.toLowerCase().indexOf(search.toLowerCase()) > -1 && true)
+                    || (production_identifier.toLowerCase().indexOf(search.toLowerCase()) > -1 && true)
+                    || (load_date.toLowerCase().indexOf(search.toLowerCase()) > -1 && true)
+                    || (delivery.toLowerCase().indexOf(search.toLowerCase()) > -1 && true)
+                    || (xd.toLowerCase().indexOf(search.toLowerCase()) > -1 && true)
             })
         },
     },
     methods: {
+        birim() {
+            this.form.calibration_unit_id = this.form.loaded_unit_id;
+        },
         setCountry(event) {
             this.form.country_code = this.facilities[event.target.selectedIndex].country;
         },
@@ -509,13 +518,18 @@ export default {
         },
         saveProduct() {
             var self = this;
-            let plates = this.form.cityPlate;
-            this.form.post('/sale')
-                .then(function (data) {
-                    self.form.cityPlate = plates;
-                    self.sonuc(data.status, data.message);
-                    self.getProducts();
-                })
+            if (this.form.loaded_activity >= this.form.calibration_activity) {
+                let plates = this.form.cityPlate;
+                this.form.post('/sale')
+                    .then(function (data) {
+                        self.form.cityPlate = plates;
+                        self.sonuc(data.status, data.message);
+                        self.getProducts();
+                    })
+            } else {
+                Swal.fire('Hata', 'Hedeflenen aktivite, Yüklenen aktivite sayısından büyük olamaz', 'error');
+            }
+
         },
         detail(product) {
             this.selected_product = product;

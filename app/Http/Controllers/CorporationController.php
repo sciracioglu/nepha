@@ -53,11 +53,28 @@ class CorporationController extends Controller
         libxml_use_internal_errors(true);
         $xml = json_decode(json_encode(simplexml_load_string($clean_xml)), true);
         $companies = $xml['Body']['ns2:response']['companies'];
-        if (isset($companies['company'])) {
-            return collect($companies['company']);
-        }
+        $comp = [];
 
-        return [];
+        foreach ($companies['company'] as $company) {
+            array_push($comp, [
+                'gln' => $company['gln'],
+                'label' => '(' . $company['gln'] . ') ' . $company['companyName'],
+                'companyName' => $company['companyName'],
+                'authorized' => $company['authorized'] ?? '',
+                'email' => $company['email'],
+                'phone' => $company['phone'] ?? '',
+                'city' => $company['city'],
+                'town' => $company['town'],
+                'address' => $company['address'] ?? '',
+            ]);
+        }
+        sort($comp);
+        return collect($comp);
+//        if (isset($companies['company'])) {
+//            return collect($companies['company']);
+//        }
+//
+//        return [];
     }
 
     public function plates()
