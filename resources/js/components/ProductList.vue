@@ -517,8 +517,8 @@ export default {
                 });
         },
         saveProduct() {
-            var self = this;
-            if (this.form.loaded_activity >= this.form.calibration_activity) {
+            if (parseFloat(this.form.loaded_activity) >= parseFloat(this.form.calibration_activity)) {
+                let self = this;
                 let plates = this.form.cityPlate;
                 this.form.post('/sale')
                     .then(function (data) {
