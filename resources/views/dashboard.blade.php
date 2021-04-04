@@ -9,7 +9,7 @@
         <div class="p-3 bg-primary-300 rounded overflow-hidden position-relative text-white mb-g">
             <div class="">
                 <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                    {!! $user_count !!}
+                    {!! $sales_6 !!}
                     <small class="m-0 l-h-n">son 6 aylık satış sayısı</small>
                 </h3>
             </div>
@@ -20,7 +20,7 @@
         <div class="p-3 bg-info-200 rounded overflow-hidden position-relative text-white mb-g">
             <div class="">
                 <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                    {!! $medicine_count !!}
+                    {!! $sales_3 !!}
                     <small class="m-0 l-h-n">son 3 aylık satış sayısı</small>
                 </h3>
             </div>
@@ -63,72 +63,6 @@
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    Highcharts.chart('container', {
-      title: {
-          text: 'Aylara Göre Satış Miktarları'
-      },
-      xAxis: {
-          categories: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs']
-      },
-      labels: {
-          items: [{
-
-              style: {
-                  left: '50px',
-                  top: '18px',
-                  color: ( // theme
-                      Highcharts.defaultOptions.title.style &&
-                      Highcharts.defaultOptions.title.style.color
-                  ) || 'pink'
-              }
-          }]
-      },
-      series: [{
-          type: 'column',
-          name: 'Ocak',
-          data: [3, 2, 1, 3, 4]
-      }, {
-          type: 'column',
-          name: 'Şubat',
-          data: [2, 3, 5, 7, 6]
-      }, {
-          type: 'column',
-          name: 'Mart',
-          data: [4, 3, 3, 9, 0],
-          color: Highcharts.getOptions().colors[7]
-      }, {
-          type: 'spline',
-          name: 'Nisan',
-          data: [3, 2.67, 3, 6.33, 3.33],
-          marker: {
-              lineWidth: 2,
-              lineColor: Highcharts.getOptions().colors[4],
-              fillColor: 'white'
-          }
-      }, {
-          type: 'pie',
-          name: 'Total consumption',
-          data: [{
-              name: 'OCTREOSCAN',
-              y: 13,
-              color: Highcharts.getOptions().colors[0] // Jane's color
-          }, {
-              name: 'TECHNESCAN® DMSA',
-              y: 23,
-              color: Highcharts.getOptions().colors[1] // John's color
-          }, {
-              name: 'TECHNESCAN® LYOMAA',
-              y: 19,
-              color: Highcharts.getOptions().colors[4] // Joe's color
-          }],
-          center: [100, 80],
-          size: 100,
-          showInLegend: false,
-          dataLabels: {
-              enabled: false
-          }
-      }]
-  });
   Highcharts.chart('container1', {
       chart: {
           plotBackgroundColor: null,
@@ -158,32 +92,45 @@
           }
       },
       series: [{
-          name: 'Brands',
+          name: 'Sehirler',
           colorByPoint: true,
-          data: [{
-              name: 'Ankara',
-              y: 61.41,
-              sliced: true,
-              selected: true,
-              color:'#886ab5'
-          }, {
-              name: 'İstanbul',
-              y: 11.84
-          }, {
-              name: 'Bursa',
-              y: 10.85
-          }, {
-              name: 'İzmir',
-              y: 4.67
-          }, {
-              name: 'Adana',
-              y: 4.18
-          }, {
-              name: 'Diğer',
-              y: 7.05
-          }]
+          data: {!! $cities !!}
       }]
   });
+  Highcharts.chart('container', {
+          chart: {
+              plotBackgroundColor: null,
+              plotBorderWidth: null,
+              plotShadow: false,
+              type: 'pie'
+          },
+          title: {
+              text: 'Satılan Ürünler'
+          },
+          tooltip: {
+              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+          },
+          accessibility: {
+              point: {
+                  valueSuffix: '%'
+              }
+          },
+          plotOptions: {
+              pie: {
+                  allowPointSelect: true,
+                  cursor: 'pointer',
+                  dataLabels: {
+                      enabled: false
+                  },
+                  showInLegend: true
+              }
+          },
+          series: [{
+              name: 'İlaçlar',
+              colorByPoint: true,
+              data: {!! $medicines !!}
+          }]
+      });
 });
 </script>
 @endsection

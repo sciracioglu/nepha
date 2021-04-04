@@ -4,5 +4,5 @@
 @endsection
 
 @section('content')
-
+    <rapor :cities="{{ $cities }}" :groups="{{ $groups }}" :medicines="{{ $medicines }}"></rapor>
 @endsection

@@ -36,12 +36,12 @@ class ProductController extends SalesController
 
         $codes = (new SalesController())->codes;
         return Products::with('medicine')->get()
-            ->map(function ($product) use($codes) {
+            ->map(function ($product) use ($codes) {
                 return [
                     'id' => $product->id,
-                    'gtin' => Medicine::where('gtin',$product->gtin)->first()->medicine,
+                    'gtin' => Medicine::where('gtin', $product->gtin)->first()->medicine,
                     'stakeholderType' => $product->stakeholderType,
-                    'city' => PlateCode::where('code',$product->plate)->first(),
+                    'city' => PlateCode::where('code', $product->plate)->first(),
                     'medicine' => $product->medicine[0]->medicine,
                     'corp' => $product->corp,
                     'bn' => $product->bn,
@@ -53,10 +53,10 @@ class ProductController extends SalesController
                     'load_date' => Carbon::parse($product->load_date)->format('d/m/Y'),
                     'delivery' => Carbon::parse($product->delivery)->format('d/m/Y'),
                     'dt' => $this->dt[$product->dt],
-                    'uc' => $codes[$product->uc],
+                    'uc' => $codes[$product->uc] ?? '',
                     'bildirim_id' => $product->bildirim_id,
                     'cancel_date' => $product->cancel_date,
-                    'country_code' => Country::where('code2',$product->country_code)->first()->country,
+                    'country_code' => Country::where('code2', $product->country_code)->first()->country,
                     'xd' => Carbon::parse($product->xd)->format('d/m/Y'),
                 ];
             });
