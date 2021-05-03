@@ -14,61 +14,21 @@
                     </div>
                     <div class="panel-container show">
                         <div class="panel-content">
-                            <div class="form-group">
-                                <label class="form-label"></label>
-                                <div class="input-group bg-white shadow-inset-2">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text bg-transparent border-right-0">
-                                            <i class="fal fa-search"></i>
-                                        </span>
-                                    </div>
-                                    <input type="text" v-model="search"
-                                           class="form-control border-left-0 bg-transparent pl-0"
-                                           placeholder="Arayın...">
-                                </div>
-                            </div>
-                            <table class="table table-bordered table-hover">
-                                <thead class="thead-themed">
-                                <tr>
-                                    <th>Ürün</th>
-                                    <th>Parti No</th>
-                                    <th>Kurum</th>
-                                    <th>Üretim Tesisi</th>
-                                    <th>Yüklenen Aktivite</th>
-                                    <th>Hedeflenen Aktivite</th>
-                                    <th>Yükleme Tarihi</th>
-                                    <th>DT</th>
-                                    <th>Ülke Kodu</th>
-                                    <th>Son Kullanım Tarihi</th>
-                                    <th>Teslim Tarihi</th>
-                                    <th>Onay</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr v-for='(product,index) in filtre' :key="index">
-                                    <td>
-                                        <a href="#" @click="detail(product)">
-                                            {{ product.gtin }}
-                                        </a>
-                                    </td>
-                                    <td>{{ product.bn }}</td>
-                                    <td>{{ product.corp }}</td>
-                                    <td>{{ product.production_identifier }}</td>
-                                    <td v-html="product.loaded_activity+' '+product.loaded_unit_id">
-                                        {{ product.loaded_activity }}
-                                    </td>
-                                    <td v-html="product.calibration_activity+' '+product.calibration_unit_id"></td>
-                                    <td>{{ product.load_date }}</td>
-                                    <td>{{ product.dt }}</td>
-                                    <td>{{ product.country_code }}</td>
-                                    <td>{{ product.xd }}</td>
-                                    <td>{{ product.delivery }}</td>
-                                    <td>
-                                        <span v-if="product.cancel_date">{{ product.cancel_date }} tarihinde iptal edildi</span>
-                                        <span v-else>{{ product.uc }}</span></td>
-                                </tr>
-                                </tbody>
-                            </table>
+                            <vue-good-table
+                                :columns="colums"
+                                :rows="products"
+                                :search-options="{
+                                    enabled: true,
+                                }"
+                                :pagination-options=" {
+                                  enabled: true,
+                                  firstRecordOnPage: 'İlk sayfa',
+                                  lastRecordOnPage: 'Son sayfa',
+                                  totalRecords: 'Toplam kayıt sayısı',
+                                  currentPage: 'şu anki sayfa',
+                                  totalPage: 'toplam sayfa sayısı',
+                                }">
+                            </vue-good-table>
                         </div>
                     </div>
                 </div>
@@ -392,6 +352,56 @@ export default {
             corps: [],
             countries: [],
             medicines: [],
+            colums: [
+                {
+                    label: 'Ürün',
+                    field: 'gtin'
+                },
+                {
+                    label: 'Parti No',
+                    field: 'bn'
+                },
+                {
+                    label: 'Kurum',
+                    field: 'corp'
+                },
+                {
+                    label: 'Üretim Tesisi',
+                    field: 'production_identifier'
+                },
+                {
+                    label: 'Yüklenen Aktivite',
+                    field: 'loaded_activity'
+                },
+                {
+                    label: 'Hedeflenen Aktivite',
+                    field: 'calibration_activity'
+                },
+                {
+                    label: 'Yükleme Tarihi',
+                    field: 'load_date'
+                },
+                {
+                    label: 'DT',
+                    field: 'dt'
+                },
+                {
+                    label: 'Ülke Kod',
+                    field: 'country_code'
+                },
+                {
+                    label: 'Son Kullanım Tarihi',
+                    field: 'xd'
+                },
+                {
+                    label: 'Teslim Tarihi',
+                    field: 'delivery'
+                },
+                {
+                    label: 'Onay',
+                    field: 'uc'
+                },
+            ],
             groups: [],
             facilities: [],
             form: new Form({
@@ -423,45 +433,7 @@ export default {
             }),
         }
     },
-    computed: {
-        filtre: function () {
-            return this.products.filter(product => {
-                let letters = {"İ": "i", "I": "ı", "Ş": "ş", "Ğ": "ğ", "Ü": "ü", "Ö": "ö", "Ç": "ç"};
-                let corp = product.corp != null ? product.corp.replace(/(([İIŞĞÜÇÖ]))/g, function (letter) {
-                    return letters[letter];
-                }) : ''
-                let gtin = product.gtin != null ? product.gtin.replace(/(([İIŞĞÜÇÖ]))/g, function (letter) {
-                    return letters[letter];
-                }) : ''
-                let bn = product.bn != null ? product.bn.replace(/(([İIŞĞÜÇÖ]))/g, function (letter) {
-                    return letters[letter];
-                }) : ''
-                let production_identifier = product.production_identifier != null ? product.production_identifier.replace(/(([İIŞĞÜÇÖ]))/g, function (letter) {
-                    return letters[letter];
-                }) : ''
-                let load_date = product.load_date != null ? product.load_date.replace(/(([İIŞĞÜÇÖ]))/g, function (letter) {
-                    return letters[letter];
-                }) : ''
-                let delivery = product.delivery != null ? product.delivery.replace(/(([İIŞĞÜÇÖ]))/g, function (letter) {
-                    return letters[letter];
-                }) : ''
-                let xd = product.xd != null ? product.xd.replace(/(([İIŞĞÜÇÖ]))/g, function (letter) {
-                    return letters[letter];
-                }) : ''
-                let search = this.search.replace(/(([İIŞĞÜÇÖ]))/g, function (letter) {
-                    return letters[letter];
-                })
 
-                return gtin.toLowerCase().indexOf(search.toLowerCase()) > -1
-                    || (corp.toLowerCase().indexOf(search.toLowerCase()) > -1 && true)
-                    || (bn.toLowerCase().indexOf(search.toLowerCase()) > -1 && true)
-                    || (production_identifier.toLowerCase().indexOf(search.toLowerCase()) > -1 && true)
-                    || (load_date.toLowerCase().indexOf(search.toLowerCase()) > -1 && true)
-                    || (delivery.toLowerCase().indexOf(search.toLowerCase()) > -1 && true)
-                    || (xd.toLowerCase().indexOf(search.toLowerCase()) > -1 && true)
-            })
-        },
-    },
     methods: {
         birim() {
             this.form.calibration_unit_id = this.form.loaded_unit_id;
