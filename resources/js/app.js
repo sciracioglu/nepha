@@ -15,6 +15,7 @@ import 'vue-good-table/dist/vue-good-table.css'
 window.Form = Form;
 Vue.use(VueGoodTablePlugin);
 Vue.component('datetime', Datetime);
+
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 

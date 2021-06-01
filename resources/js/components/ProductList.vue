@@ -20,6 +20,7 @@
                                 :search-options="{
                                     enabled: true,
                                 }"
+                                @on-row-dblclick="detail"
                                 :pagination-options=" {
                                   enabled: true,
                                   firstRecordOnPage: 'İlk sayfa',
@@ -504,7 +505,7 @@ export default {
 
         },
         detail(product) {
-            this.selected_product = product;
+            this.selected_product = product.row;
             this.selected = 1;
         },
         sonuc(status, message) {
